@@ -9,8 +9,8 @@
  * Each todo can be uniquely accessed by id (a creation timestamp).
  */
 
-export const todos = (() => {
-	const todosLosTodos = [];
+export const Todos = (() => {
+	const todosLosTodos = load();
 
 	/**
 	 * Add new todo with given properties to array of all todos
@@ -22,7 +22,7 @@ export const todos = (() => {
 	 * @param {boolean} [complete = false]
 	 * @param {boolean} [urgent = false]
 	 */
-	const add = (
+	const addTodo = (
 		name,
 		description,
 		dueDate,
@@ -40,6 +40,7 @@ export const todos = (() => {
 			urgent,
 			id,
 		});
+		save();
 	};
 
 	/**
@@ -49,11 +50,12 @@ export const todos = (() => {
 	 * @param {string} property
 	 * @param {*} value
 	 */
-	const edit = (id, property, value) => {
+	const editTodo = (id, property, value) => {
 		const index = todosLosTodos.findIndex((todo) => todo.id === id);
 		if (index > -1 && todosLosTodos[index][property]) {
 			todosLosTodos[index][property] = value;
 		}
+		save();
 	};
 
 	/**
@@ -64,6 +66,7 @@ export const todos = (() => {
 	const deleteTodo = (id) => {
 		const index = todosLosTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) todosLosTodos.splice(index, 1);
+		save();
 	};
 
 	/**
@@ -75,6 +78,7 @@ export const todos = (() => {
 		todosLosTodos.forEach((todo) => {
 			if (todo.project === project) todo.project = null;
 		});
+		save();
 	};
 
 	/**
@@ -88,9 +92,12 @@ export const todos = (() => {
 
 	/**
 	 * Load array of all todos from localStorage
+	 *
+	 * @returns {Array} todos from localStorage or empty
 	 */
 	const load = () => {
-		todosLosTodos = JSON.parse(window.localStorage.getItem("todos"));
+		const token = window.localStorage.getItem("todos");
+		return token ? JSON.parse(token) : [];
 	};
 
 	/**
@@ -112,6 +119,7 @@ export const todos = (() => {
 				? (todosLosTodos[index].complete = true)
 				: (todosLosTodos[index].complete = false);
 		}
+		save();
 	};
 
 	/**
@@ -126,16 +134,15 @@ export const todos = (() => {
 				? (todosLosTodos[index].urgent = true)
 				: (todosLosTodos[index].urgent = false);
 		}
+		save();
 	};
 
 	return {
-		add,
-		edit,
+		addTodo,
+		editTodo,
 		deleteTodo,
 		deleteProject,
 		getAll,
-		load,
-		save,
 		toggleComplete,
 		toggleUrgent,
 	};
