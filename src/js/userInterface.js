@@ -1,14 +1,12 @@
-// UI.js
+// userInterface.js
 
 /**
  * This file contains the module for managing the UI.
  */
 import { format } from "date-fns";
-import Todos from "./Todos.js";
 
-export const UI = (() => {
+export const userInterface = (() => {
 	const projects = [];
-	const todos = Todos.getAll();
 	let currentProject = "home";
 
 	// DOM Elements

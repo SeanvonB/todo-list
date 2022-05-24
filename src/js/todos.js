@@ -9,23 +9,21 @@
  * Each todo can be uniquely accessed by id (a creation timestamp).
  */
 
-export const Todos = (() => {
-	const todosLosTodos = load();
-
+export const todos = (() => {
 	/**
 	 * Add new todo with given properties to array of all todos
 	 *
 	 * @param {string} name
-	 * @param {string} description
-	 * @param {Object} dueDate
+	 * @param {string} [details = ""]
+	 * @param {Object} [dueDate = null]
 	 * @param {string} [project = null]
 	 * @param {boolean} [complete = false]
 	 * @param {boolean} [urgent = false]
 	 */
 	const addTodo = (
 		name,
-		description,
-		dueDate,
+		details = "",
+		dueDate = null,
 		project = null,
 		complete = false,
 		urgent = false
@@ -33,28 +31,13 @@ export const Todos = (() => {
 		const id = new Date();
 		todosLosTodos.push({
 			name,
-			description,
+			details,
 			dueDate,
 			project,
 			complete,
 			urgent,
 			id,
 		});
-		save();
-	};
-
-	/**
-	 * Replace value of given property with new given value
-	 *
-	 * @param {number} id
-	 * @param {string} property
-	 * @param {*} value
-	 */
-	const editTodo = (id, property, value) => {
-		const index = todosLosTodos.findIndex((todo) => todo.id === id);
-		if (index > -1 && todosLosTodos[index][property]) {
-			todosLosTodos[index][property] = value;
-		}
 		save();
 	};
 
@@ -78,6 +61,21 @@ export const Todos = (() => {
 		todosLosTodos.forEach((todo) => {
 			if (todo.project === project) todo.project = null;
 		});
+		save();
+	};
+
+	/**
+	 * Replace value of given property with new given value
+	 *
+	 * @param {number} id
+	 * @param {string} property
+	 * @param {*} value
+	 */
+	const editTodo = (id, property, value) => {
+		const index = todosLosTodos.findIndex((todo) => todo.id === id);
+		if (index > -1 && todosLosTodos[index][property]) {
+			todosLosTodos[index][property] = value;
+		}
 		save();
 	};
 
@@ -136,6 +134,9 @@ export const Todos = (() => {
 		}
 		save();
 	};
+
+	// Initialize todos array
+	const todosLosTodos = load();
 
 	return {
 		addTodo,
