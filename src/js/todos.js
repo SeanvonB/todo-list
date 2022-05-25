@@ -1,17 +1,16 @@
 // todos.js
 
 /**
- * This file contains the module for managing todos.
+ * Module that manages todo data
  *
- * Individual todos are stored in an array, which will be converted to JSON
- * format for localStorage, so todos can't store functions/methods.
- *
- * Each todo can be uniquely accessed by id (a creation timestamp).
+ * NOTE: allTodos is converted to JSON format for localStorage, so methods
+ * can't be stored directly on todo objects.
  */
-
 export const todos = (() => {
+	const allTodos = load();
+
 	/**
-	 * Add new todo with given properties to array of all todos
+	 * Create new todo and add to allTodos
 	 *
 	 * @param {string} name
 	 * @param {string} [details = ""]
@@ -20,49 +19,52 @@ export const todos = (() => {
 	 * @param {boolean} [complete = false]
 	 * @param {boolean} [urgent = false]
 	 */
-	const addTodo = (
+	function addTodo(
 		name,
 		details = "",
 		dueDate = null,
 		project = null,
 		complete = false,
 		urgent = false
-	) => {
-		const id = new Date();
-		todosLosTodos.push({
+	) {
+		const created = new Date();
+		const id = Math.floor(Math.random() * Date.now());
+
+		allTodos.push({
 			name,
 			details,
 			dueDate,
 			project,
 			complete,
 			urgent,
+			created,
 			id,
 		});
 		save();
-	};
+	}
+
+	/**
+	 * Delete all todos with given project
+	 *
+	 * @param {string} project
+	 */
+	function deleteProject(project) {
+		for (let todo of allTodos) {
+			if (todo.project === project) deleteTodo(todo.id);
+		}
+		save();
+	}
 
 	/**
 	 * Delete todo with given id
 	 *
 	 * @param {number} id
 	 */
-	const deleteTodo = (id) => {
-		const index = todosLosTodos.findIndex((todo) => todo.id === id);
-		if (index > -1) todosLosTodos.splice(index, 1);
+	function deleteTodo(id) {
+		const index = allTodos.findIndex((todo) => todo.id === id);
+		if (index > -1) allTodos.splice(index, 1);
 		save();
-	};
-
-	/**
-	 * Delete reference to given project from all todos
-	 *
-	 * @param {string} project
-	 */
-	const deleteProject = (project) => {
-		todosLosTodos.forEach((todo) => {
-			if (todo.project === project) todo.project = null;
-		});
-		save();
-	};
+	}
 
 	/**
 	 * Replace value of given property with new given value
@@ -71,72 +73,69 @@ export const todos = (() => {
 	 * @param {string} property
 	 * @param {*} value
 	 */
-	const editTodo = (id, property, value) => {
-		const index = todosLosTodos.findIndex((todo) => todo.id === id);
-		if (index > -1 && todosLosTodos[index][property]) {
-			todosLosTodos[index][property] = value;
+	function editTodo(id, property, value) {
+		const index = allTodos.findIndex((todo) => todo.id === id);
+		if (index > -1 && allTodos[index][property]) {
+			allTodos[index][property] = value;
 		}
 		save();
-	};
+	}
 
 	/**
-	 * Return copy of array of all todos
+	 * Return copy of allTodos array
 	 *
 	 * @returns {Array}
 	 */
-	const getAll = () => {
-		return [...todosLosTodos];
-	};
+	function getAll() {
+		return [...allTodos];
+	}
 
 	/**
-	 * Load array of all todos from localStorage
+	 * Load allTodos array from localStorage
 	 *
 	 * @returns {Array} todos from localStorage or empty
 	 */
-	const load = () => {
-		const token = window.localStorage.getItem("todos");
+	function load() {
+		const token = window.localStorage.getItem("allTodos");
 		return token ? JSON.parse(token) : [];
-	};
+	}
 
 	/**
-	 * Save array of all todos to localStorage
+	 * Save allTodos array to localStorage
 	 */
-	const save = () => {
-		window.localStorage.setItem("todos", JSON.stringify(todosLosTodos));
-	};
+	function save() {
+		window.localStorage.setItem("allTodos", JSON.stringify(allTodos));
+	}
 
 	/**
 	 * Toggle complete status of todo with given id
 	 *
 	 * @param {number} id
 	 */
-	const toggleComplete = (id) => {
-		const index = todosLosTodos.findIndex((todo) => todo.id === id);
+	function toggleComplete(id) {
+		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) {
-			todosLosTodos[index].complete === false
-				? (todosLosTodos[index].complete = true)
-				: (todosLosTodos[index].complete = false);
+			allTodos[index].complete === false
+				? (allTodos[index].complete = true)
+				: (allTodos[index].complete = false);
 		}
 		save();
-	};
+	}
 
 	/**
 	 * Toggle urgent status of todo with given id
 	 *
 	 * @param {number} id
 	 */
-	const toggleUrgent = (id) => {
-		const index = todosLosTodos.findIndex((todo) => todo.id === id);
+	function toggleUrgent(id) {
+		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) {
-			todosLosTodos[index].urgent === false
-				? (todosLosTodos[index].urgent = true)
-				: (todosLosTodos[index].urgent = false);
+			allTodos[index].urgent === false
+				? (allTodos[index].urgent = true)
+				: (allTodos[index].urgent = false);
 		}
 		save();
-	};
-
-	// Initialize todos array
-	const todosLosTodos = load();
+	}
 
 	return {
 		addTodo,
