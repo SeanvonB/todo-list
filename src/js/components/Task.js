@@ -29,7 +29,8 @@ export const Task = (todo) => {
 
 	const dueDate = document.createElement("td");
 	dueDate.classList.add("due-date");
-	if (todo.dueDate) dueDate.innerText = format(todo.dueDate, "MMM.do");
+	if (todo.dueDate)
+		dueDate.innerText = format(parseISO(todo.dueDate), "MMM do");
 	row.appendChild(dueDate);
 
 	const complete = document.createElement("td");
