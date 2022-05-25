@@ -1,61 +1,72 @@
 // userInterface.js
 
 /**
- * This file contains the module for managing the UI.
+ * Module that controls UI components
  */
-import { format } from "date-fns";
+import { Header } from "./components/Header";
+import { Form } from "./components/Form";
+import { Menu } from "./components/Menu";
+import { Task } from "./components/Task";
+import { todos } from "./todos";
 
 export const userInterface = (() => {
-	const projects = [];
-	let currentProject = "home";
+	const allTodos = todos.getAll();
 
 	// DOM Elements
 	const footer = document.createElement("footer");
 	const header = document.createElement("header");
-	const mainContainer = document.createElement("div");
-	const nav = document.createElement("nav");
-	const todoList = document.createElement("main");
+	const mainContainer = document.createElement("main");
+	const navContainer = document.createElement("nav");
+	const tableBody = document.createElement("tbody");
+	const tableHead = document.createElement("thead");
+	const todoTable = document.createElement("table");
 
 	/**
 	 * Load initial UI state for new session
 	 */
-	const init = () => {};
+	function init() {
+		todoTable.append(tableHead, tableBody);
+		mainContainer.append(navContainer, todoTable);
+		document.body.append(header, mainContainer, footer);
+		renderHeader();
+		renderList(allTodos);
+	}
 
 	/**
 	 * Create new project folder
 	 *
-	 * @param {Object} form
+	 * @param {string} name
 	 */
-	const addProject = (form) => {};
+	function addProject(name) {}
 
 	/**
 	 * Create new todo
 	 *
 	 * @param {Object} form
 	 */
-	const addTodo = (form) => {};
+	function addTodo(form) {}
 
 	/**
 	 * Delete existing project folder
 	 *
 	 * @param {string} project
 	 */
-	const deleteProject = (project) => {};
+	function deleteProject(project) {}
 
 	/**
 	 * Delete existing todo
 	 *
 	 * @param {number} id
 	 */
-	const deleteTodo = (id) => {};
+	function deleteTodo(id) {}
 
 	/**
-	 * Edit details of existing project folder
+	 * Edit name of existing project folder
 	 *
 	 * @param {string} project
-	 * @param {Object} form
+	 * @param {string} newName
 	 */
-	const editProject = (project, form) => {};
+	function editProject(project, newName) {}
 
 	/**
 	 * Edit details of existing todo
@@ -63,19 +74,53 @@ export const userInterface = (() => {
 	 * @param {number} id
 	 * @param {Object} form
 	 */
-	const editTodo = (id, form) => {};
+	function editTodo(id, form) {}
+
+	/**
+	 * Render sortable header section of todoTable
+	 */
+	function renderHeader() {
+		const row = Header();
+		tableHead.appendChild(row);
+	}
+
+	/**
+	 * Render tasks in main section of todoTable
+	 *
+	 * @param {Array} todos
+	 */
+	function renderList(todos) {
+		for (let todo of todos) {
+			const row = Task(todo);
+			tableBody.appendChild(row);
+		}
+	}
+
+	/**
+	 * Toggle complete status of todo with given id
+	 *
+	 * @param {number} id
+	 */
+	function toggleComplete(id) {}
+
+	/**
+	 * Toggle urgent status of todo with given id
+	 *
+	 * @param {number} id
+	 */
+	function toggleUrgent(id) {}
 
 	/**
 	 * Change view to home
 	 */
-	const viewHome = () => {};
+	function viewHome() {}
 
 	/**
 	 * Change view to given project
 	 *
 	 * @param {string} project
 	 */
-	const viewProject = (project) => {};
+	function viewProject(project) {}
 
 	return { init };
 })();
