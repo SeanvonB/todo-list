@@ -30,6 +30,12 @@ export const todos = (() => {
 		const created = new Date();
 		const id = Math.floor(Math.random() * Date.now());
 
+		/**
+		 * Date objects will be converted to strings for localStorage; doing
+		 * so immediately just ensures consistent type.
+		 */
+		dueDate = dueDate.toISOString();
+
 		allTodos.push({
 			name,
 			details,
