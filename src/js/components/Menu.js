@@ -11,43 +11,33 @@ export const Menu = (projects = []) => {
 
 	const home = document.createElement("li");
 	home.classList.add("home");
-	const homeText = document.createElement("h1");
-	homeText.innerText = "Home";
-	home.appendChild(homeText);
+	home.innerText = "Home";
 	menu.appendChild(home);
 
 	const today = document.createElement("li");
 	today.classList.add("today");
-	const todayText = document.createElement("h1");
-	todayText.innerText = "Today";
-	today.appendChild(todayText);
+	today.innerText = "Today";
 	menu.appendChild(today);
 
 	const upcoming = document.createElement("li");
 	upcoming.classList.add("upcoming");
-	const upcomingText = document.createElement("h1");
-	upcomingText.innerText = "Upcoming";
-	upcoming.appendChild(upcomingText);
+	upcoming.innerText = "Upcoming";
 	menu.appendChild(upcoming);
 
-	const anytime = document.createElement("li");
-	anytime.classList.add("anytime");
-	const anytimeText = document.createElement("h1");
-	anytimeText.innerText = "Anytime";
-	anytime.appendChild(anytimeText);
-	menu.appendChild(anytime);
+	const overdue = document.createElement("li");
+	overdue.classList.add("overdue");
+	overdue.innerText = "Overdue";
+	menu.appendChild(overdue);
 
 	for (let project of projects) {
 		const item = document.createElement("li");
 		item.setAttribute("data-project", project);
 		item.classList.add(project);
-		const itemText = document.createElement("h1");
-		itemText.innerText = project.charAt(0).toUpperCase() + project.slice(1);
+		item.innerText = project.charAt(0).toUpperCase() + project.slice(1);
 		const deleteBtn = document.createElement("button");
 		deleteBtn.setAttribute("data-project", project);
 		deleteBtn.classList.add("delete-project");
 		deleteBtn.innerText = "X";
-		item.appendChild(itemText);
 		item.appendChild(deleteBtn);
 		menu.appendChild(item);
 	}

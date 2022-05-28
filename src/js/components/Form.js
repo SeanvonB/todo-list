@@ -5,11 +5,20 @@
  *
  * TODO: Improve date input to account for local time
  *
- * @param {string} project
+ * @param {string} currentProject
  * @param {Object} editTodo
  * @returns {HTMLFormElement}
  */
-export const Form = (project = null, editTodo = false) => {
+export const Form = (currentProject, editTodo = false) => {
+	if (
+		currentProject === "home" ||
+		currentProject === "today" ||
+		currentProject === "upcoming" ||
+		currentProject === "overdue"
+	) {
+		currentProject = null;
+	}
+
 	const modal = document.createElement("dialog");
 	modal.classList.add("modal", "close-modal");
 	modal.setAttribute("open", "");
@@ -79,7 +88,7 @@ export const Form = (project = null, editTodo = false) => {
 	projectInput.setAttribute("type", "hidden");
 	projectInput.setAttribute("name", "project");
 	projectInput.setAttribute("id", "project");
-	projectInput.setAttribute("value", project);
+	projectInput.setAttribute("value", currentProject);
 	form.appendChild(projectInput);
 
 	const editInput = document.createElement("input");

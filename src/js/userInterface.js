@@ -11,8 +11,10 @@ import { todos } from "./todos";
 
 export const userInterface = (() => {
 	const allTodos = todos.getAll();
+	const currentProject = "home";
 
 	// DOM Elements
+	const dialogContainer = document.createElement("div");
 	const footer = document.createElement("footer");
 	const header = document.createElement("header");
 	const mainContainer = document.createElement("main");
@@ -27,10 +29,31 @@ export const userInterface = (() => {
 	function init() {
 		todoTable.append(tableHead, tableBody);
 		mainContainer.append(navContainer, todoTable);
-		document.body.append(header, mainContainer, footer);
+		document.body.append(header, mainContainer, dialogContainer, footer);
+		renderMenu();
 		renderHeader();
-		renderList(allTodos);
+		renderTasks(allTodos);
 	}
+
+	/**
+	 * Handle user input to form component
+	 */
+	function handleForm(event) {}
+
+	/**
+	 * Handle user input to header component
+	 */
+	function handleHeader(event) {}
+
+	/**
+	 * Handle user input to menu component
+	 */
+	function handleMenu(event) {}
+
+	/**
+	 * Handle user input to task component
+	 */
+	function handleTask(event) {}
 
 	/**
 	 * Create new project folder
@@ -77,11 +100,48 @@ export const userInterface = (() => {
 	function editTodo(id, form) {}
 
 	/**
+	 * Render add/edit form in modal
+	 *
+	 * Defaults to creating new todo in current folder unless passed existing
+	 * todo object as optional parameter
+	 *
+	 *
+	 * @param {Object} [editTodo = false]
+	 */
+	function renderForm(editTodo = false) {
+		const form = Form(currentProject, editTodo);
+		dialogContainer.appendChild(form);
+	}
+
+	/**
 	 * Render sortable header section of todoTable
 	 */
 	function renderHeader() {
+		while (tableHead.firstChild) {
+			tableHead.removeChild(tableHead.firstChild);
+		}
+
 		const row = Header();
 		tableHead.appendChild(row);
+	}
+
+	/**
+	 * Render folder navigation menu
+	 */
+	function renderMenu() {
+		while (navContainer.firstChild) {
+			navContainer.removeChild(navContainer.firstChild);
+		}
+
+		const projects = [];
+		for (let todo of allTodos) {
+			if (todo.project !== null && !projects.includes(todo.project)) {
+				projects.push(todo.project);
+			}
+		}
+
+		const menu = Menu(projects);
+		navContainer.appendChild(menu);
 	}
 
 	/**
@@ -89,7 +149,11 @@ export const userInterface = (() => {
 	 *
 	 * @param {Array} todos
 	 */
-	function renderList(todos) {
+	function renderTasks(todos) {
+		while (tableBody.firstChild) {
+			tableBody.removeChild(tableBody.firstChild);
+		}
+
 		for (let todo of todos) {
 			const row = Task(todo);
 			tableBody.appendChild(row);
