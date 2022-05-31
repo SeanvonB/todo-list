@@ -11,7 +11,7 @@ import { todos } from "./todos";
 
 export const userInterface = (() => {
 	const allTodos = todos.getAll();
-	const currentProject = "home";
+	let currentProject = "home";
 
 	// DOM Elements
 	const dialogContainer = document.createElement("div");
@@ -30,30 +30,44 @@ export const userInterface = (() => {
 		todoTable.append(tableHead, tableBody);
 		mainContainer.append(navContainer, todoTable);
 		document.body.append(header, mainContainer, dialogContainer, footer);
+
+		navContainer.addEventListener("click", handleMenu);
+
 		renderMenu();
-		renderHeader();
-		renderTasks(allTodos);
+		viewHome();
 	}
 
 	/**
 	 * Handle user input to form component
 	 */
-	function handleForm(event) {}
+	function handleForm(e) {}
 
 	/**
 	 * Handle user input to header component
 	 */
-	function handleHeader(event) {}
+	function handleHeader(e) {}
 
 	/**
 	 * Handle user input to menu component
 	 */
-	function handleMenu(event) {}
+	function handleMenu(e) {
+		const previousProjects = document.querySelectorAll(".current");
+		for (let i = 0; i < previousProjects.length; i++) {
+			previousProjects[i].classList.remove("current");
+		}
+
+		if (e.target.classList.contains("home")) viewHome();
+		if (e.target.classList.contains("today")) viewToday();
+		if (e.target.classList.contains("upcoming")) viewUpcoming();
+		if (e.target.classList.contains("overdue")) viewOverdue();
+		if (e.target.hasAttribute("data-project"))
+			viewProject(e.target.dataset.project);
+	}
 
 	/**
 	 * Handle user input to task component
 	 */
-	function handleTask(event) {}
+	function handleTask(e) {}
 
 	/**
 	 * Create new project folder
@@ -175,16 +189,87 @@ export const userInterface = (() => {
 	function toggleUrgent(id) {}
 
 	/**
-	 * Change view to home
+	 * Change view to home folder
 	 */
-	function viewHome() {}
+	function viewHome() {
+		currentProject = "home";
+		navContainer.querySelector("li.home").classList.add("current");
+
+		renderHeader();
+		renderTasks(allTodos);
+	}
 
 	/**
-	 * Change view to given project
+	 * Change view to overdue folder
+	 */
+	function viewOverdue() {
+		currentProject = "overdue";
+		navContainer.querySelector("li.overdue").classList.add("current");
+
+		const today = new Date().toISOString().split("T")[0];
+		const overdueTodos = allTodos.filter((todo) => {
+			if (todo.dueDate) return todo.dueDate.split("T")[0] <= today;
+		});
+
+		renderHeader();
+		renderTasks(overdueTodos);
+	}
+
+	/**
+	 * Change view to given project folder
 	 *
 	 * @param {string} project
 	 */
-	function viewProject(project) {}
+	function viewProject(project) {
+		currentProject = project;
+		navContainer.querySelector("li." + project).classList.add("current");
+
+		const projectTodos = allTodos.filter((todo) => {
+			if (todo.project) return todo.project === project;
+		});
+
+		renderHeader();
+		renderTasks(projectTodos);
+	}
+
+	/**
+	 * Change view to today folder
+	 */
+	function viewToday() {
+		currentProject = "today";
+		navContainer.querySelector("li.today").classList.add("current");
+
+		const today = new Date().toISOString().split("T")[0];
+		const todayTodos = allTodos.filter((todo) => {
+			if (todo.dueDate) return todo.dueDate.split("T")[0] === today;
+		});
+
+		renderHeader();
+		renderTasks(todayTodos);
+	}
+
+	/**
+	 * Change view to upcoming folder
+	 */
+	function viewUpcoming() {
+		currentProject = "upcoming";
+		navContainer.querySelector("li.upcoming").classList.add("current");
+
+		const today = new Date().toISOString().split("T")[0];
+		let nextWeek = new Date();
+		nextWeek.setDate(new Date().getDate() + 7);
+		nextWeek = nextWeek.toISOString().split("T")[0];
+		const upcomingTodos = allTodos.filter((todo) => {
+			if (todo.dueDate)
+				return (
+					todo.dueDate.split("T")[0] >= today &&
+					todo.dueDate.split("T")[0] <= nextWeek
+				);
+		});
+
+		renderHeader();
+		renderTasks(upcomingTodos);
+	}
 
 	return { init };
 })();
