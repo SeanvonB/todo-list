@@ -3,8 +3,8 @@
 /**
  * Module that controls UI components
  */
-import { Header } from "./components/Header";
 import { Form } from "./components/Form";
+import { Header } from "./components/Header";
 import { Menu } from "./components/Menu";
 import { Task } from "./components/Task";
 import { todos } from "./todos";
@@ -14,23 +14,16 @@ export const userInterface = (() => {
 	let currentProject = "home";
 
 	// DOM Elements
-	const dialogContainer = document.createElement("div");
-	const footer = document.createElement("footer");
-	const header = document.createElement("header");
-	const mainContainer = document.createElement("main");
-	const navContainer = document.createElement("nav");
-	const tableBody = document.createElement("tbody");
-	const tableHead = document.createElement("thead");
-	const todoTable = document.createElement("table");
+	const addButton = document.querySelector(".add-todo");
+	const mainContainer = document.querySelector("main");
+	const navContainer = document.querySelector("nav");
+	const tableBody = document.querySelector("tbody");
+	const tableHead = document.querySelector("thead");
 
 	/**
 	 * Load initial UI state for new session
 	 */
 	function init() {
-		todoTable.append(tableHead, tableBody);
-		mainContainer.append(navContainer, todoTable);
-		document.body.append(header, mainContainer, dialogContainer, footer);
-
 		navContainer.addEventListener("click", handleMenu);
 
 		renderMenu();
@@ -124,7 +117,7 @@ export const userInterface = (() => {
 	 */
 	function renderForm(editTodo = false) {
 		const form = Form(currentProject, editTodo);
-		dialogContainer.appendChild(form);
+		mainContainer.appendChild(form);
 	}
 
 	/**
