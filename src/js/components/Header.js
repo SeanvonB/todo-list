@@ -14,6 +14,7 @@ export const Header = () => {
 	const nameHeader = document.createElement("th");
 	nameHeader.setAttribute("scope", "col");
 	const nameBtn = document.createElement("button");
+	nameBtn.classList.add("name");
 	nameBtn.textContent = "Name";
 	nameHeader.appendChild(nameBtn);
 	row.appendChild(nameHeader);
@@ -21,6 +22,7 @@ export const Header = () => {
 	const dueHeader = document.createElement("th");
 	dueHeader.setAttribute("scope", "col");
 	const dueBtn = document.createElement("button");
+	dueBtn.classList.add("due-date");
 	dueBtn.textContent = "Due Date";
 	dueHeader.appendChild(dueBtn);
 	row.appendChild(dueHeader);
@@ -28,6 +30,7 @@ export const Header = () => {
 	const completeHeader = document.createElement("th");
 	completeHeader.setAttribute("scope", "col");
 	const completeBtn = document.createElement("button");
+	completeBtn.classList.add("complete");
 	completeBtn.textContent = "Complete";
 	completeHeader.appendChild(completeBtn);
 	row.appendChild(completeHeader);
@@ -35,6 +38,7 @@ export const Header = () => {
 	const urgentHeader = document.createElement("th");
 	urgentHeader.setAttribute("scope", "col");
 	const urgentBtn = document.createElement("button");
+	urgentBtn.classList.add("urgent");
 	urgentBtn.textContent = "Urgent";
 	urgentHeader.appendChild(urgentBtn);
 	row.appendChild(urgentHeader);
@@ -42,12 +46,10 @@ export const Header = () => {
 	const createdHeader = document.createElement("th");
 	createdHeader.setAttribute("scope", "col");
 	const createdBtn = document.createElement("button");
+	createdBtn.classList.add("created");
 	createdBtn.textContent = "Created";
 	createdHeader.appendChild(createdBtn);
 	row.appendChild(createdHeader);
-
-	const editHeader = document.createElement("th");
-	row.appendChild(editHeader);
 
 	return row;
 };
