@@ -10,8 +10,9 @@ import { Task } from "./components/Task";
 import { todos } from "./todos";
 
 export const userInterface = (() => {
-	const allTodos = todos.getAll();
-	let currentProject = "home";
+	let allProjects = [];
+	let allTodos = [];
+	let currentProject = "";
 
 	// DOM Elements
 	const addButton = document.querySelector(".add-todo");
@@ -24,7 +25,12 @@ export const userInterface = (() => {
 	 * Load initial UI state for new session
 	 */
 	function init() {
-		navContainer.addEventListener("click", handleMenu);
+		allTodos = todos.getAll();
+		for (let todo of allTodos) {
+			if (todo.project !== null && !allProjects.includes(todo.project)) {
+				allProjects.push(todo.project);
+			}
+		}
 
 		renderMenu();
 		viewHome();
@@ -44,17 +50,15 @@ export const userInterface = (() => {
 	 * Handle user input to menu component
 	 */
 	function handleMenu(e) {
-		const previousProjects = document.querySelectorAll(".current");
-		for (let i = 0; i < previousProjects.length; i++) {
-			previousProjects[i].classList.remove("current");
-		}
-
 		if (e.target.classList.contains("home")) viewHome();
 		if (e.target.classList.contains("today")) viewToday();
 		if (e.target.classList.contains("upcoming")) viewUpcoming();
 		if (e.target.classList.contains("overdue")) viewOverdue();
 		if (e.target.hasAttribute("data-project"))
-			viewProject(e.target.dataset.project);
+			e.target.classList.contains("delete-project")
+				? deleteProject(e.target.dataset.project)
+				: viewProject(e.target.dataset.project);
+		if (e.type === "submit") addProject(e.target.elements.project.value);
 	}
 
 	/**
@@ -63,11 +67,16 @@ export const userInterface = (() => {
 	function handleTask(e) {}
 
 	/**
-	 * Create new project folder
+	 * Create new project folder and view it
 	 *
 	 * @param {string} name
 	 */
-	function addProject(name) {}
+	function addProject(name) {
+		name = name.toLowerCase();
+		allProjects.push(name);
+		renderMenu();
+		viewProject(name);
+	}
 
 	/**
 	 * Create new todo
@@ -77,11 +86,17 @@ export const userInterface = (() => {
 	function addTodo(form) {}
 
 	/**
-	 * Delete existing project folder
+	 * Delete existing project folder and associated todos
 	 *
 	 * @param {string} project
 	 */
-	function deleteProject(project) {}
+	function deleteProject(project) {
+		const index = allProjects.indexOf(project);
+		if (index > -1) allProjects.splice(index, 1);
+		renderMenu();
+		if (currentProject === project) viewHome();
+		todos.deleteProject(project);
+	}
 
 	/**
 	 * Delete existing todo
@@ -127,7 +142,6 @@ export const userInterface = (() => {
 		while (tableHead.firstChild) {
 			tableHead.removeChild(tableHead.firstChild);
 		}
-
 		const row = Header();
 		tableHead.appendChild(row);
 	}
@@ -136,18 +150,17 @@ export const userInterface = (() => {
 	 * Render folder navigation menu
 	 */
 	function renderMenu() {
+		const previousForm = navContainer.querySelector("form");
+		if (previousForm)
+			previousForm.removeEventListener("submit", handleMenu);
 		while (navContainer.firstChild) {
 			navContainer.removeChild(navContainer.firstChild);
 		}
 
-		const projects = [];
-		for (let todo of allTodos) {
-			if (todo.project !== null && !projects.includes(todo.project)) {
-				projects.push(todo.project);
-			}
-		}
-
-		const menu = Menu(projects);
+		const menu = Menu(allProjects.sort());
+		menu.addEventListener("click", handleMenu);
+		const form = menu.querySelector("form");
+		form.addEventListener("submit", handleMenu);
 		navContainer.appendChild(menu);
 	}
 
@@ -182,12 +195,25 @@ export const userInterface = (() => {
 	function toggleUrgent(id) {}
 
 	/**
+	 * Update currently viewed project folder
+	 *
+	 * @param {string} name
+	 */
+	function updateCurrent(name) {
+		const previousProjects = document.querySelectorAll(".current");
+		for (let i = 0; i < previousProjects.length; i++) {
+			previousProjects[i].classList.remove("current");
+		}
+
+		currentProject = name;
+		navContainer.querySelector("li." + name).classList.add("current");
+	}
+
+	/**
 	 * Change view to home folder
 	 */
 	function viewHome() {
-		currentProject = "home";
-		navContainer.querySelector("li.home").classList.add("current");
-
+		updateCurrent("home");
 		renderHeader();
 		renderTasks(allTodos);
 	}
@@ -196,14 +222,12 @@ export const userInterface = (() => {
 	 * Change view to overdue folder
 	 */
 	function viewOverdue() {
-		currentProject = "overdue";
-		navContainer.querySelector("li.overdue").classList.add("current");
-
 		const today = new Date().toISOString().split("T")[0];
 		const overdueTodos = allTodos.filter((todo) => {
 			if (todo.dueDate) return todo.dueDate.split("T")[0] <= today;
 		});
 
+		updateCurrent("overdue");
 		renderHeader();
 		renderTasks(overdueTodos);
 	}
@@ -214,13 +238,11 @@ export const userInterface = (() => {
 	 * @param {string} project
 	 */
 	function viewProject(project) {
-		currentProject = project;
-		navContainer.querySelector("li." + project).classList.add("current");
-
 		const projectTodos = allTodos.filter((todo) => {
 			if (todo.project) return todo.project === project;
 		});
 
+		updateCurrent(project);
 		renderHeader();
 		renderTasks(projectTodos);
 	}
@@ -229,14 +251,12 @@ export const userInterface = (() => {
 	 * Change view to today folder
 	 */
 	function viewToday() {
-		currentProject = "today";
-		navContainer.querySelector("li.today").classList.add("current");
-
 		const today = new Date().toISOString().split("T")[0];
 		const todayTodos = allTodos.filter((todo) => {
 			if (todo.dueDate) return todo.dueDate.split("T")[0] === today;
 		});
 
+		updateCurrent("today");
 		renderHeader();
 		renderTasks(todayTodos);
 	}
@@ -245,9 +265,6 @@ export const userInterface = (() => {
 	 * Change view to upcoming folder
 	 */
 	function viewUpcoming() {
-		currentProject = "upcoming";
-		navContainer.querySelector("li.upcoming").classList.add("current");
-
 		const today = new Date().toISOString().split("T")[0];
 		let nextWeek = new Date();
 		nextWeek.setDate(new Date().getDate() + 7);
@@ -260,6 +277,7 @@ export const userInterface = (() => {
 				);
 		});
 
+		updateCurrent("upcoming");
 		renderHeader();
 		renderTasks(upcomingTodos);
 	}

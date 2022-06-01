@@ -42,25 +42,26 @@ export const Menu = (projects = []) => {
 		menu.appendChild(item);
 	}
 
-	const newProject = document.createElement("li");
-	const input = document.createElement("div");
-	input.classList.add("hidden");
-	const inputLabel = document.createElement("label");
-	inputLabel.setAttribute("for", "project");
-	inputLabel.innerText = "Add New Project";
-	const inputField = document.createElement("input");
-	inputField.setAttribute("type", "text");
-	inputField.setAttribute("name", "project");
-	inputField.setAttribute("id", "project");
-	inputField.setAttribute("minlength", "1");
+	const form = document.createElement("form");
+	form.setAttribute("autocomplete", "off");
+	form.setAttribute("method", "dialog");
+	const label = document.createElement("label");
+	label.setAttribute("for", "project");
+	label.innerText = "Add New Project";
+	const input = document.createElement("input");
+	input.setAttribute("type", "text");
+	input.setAttribute("name", "project");
+	input.setAttribute("id", "project");
+	input.setAttribute("minlength", "1");
+	input.setAttribute("required", "");
 	const addBtn = document.createElement("button");
-	addBtn.classList.add("add-project");
+	addBtn.setAttribute("type", "submit");
+	addBtn.setAttribute("id", "submit");
 	addBtn.innerText = "+";
-	input.appendChild(inputLabel);
-	input.appendChild(inputField);
-	newProject.appendChild(input);
-	newProject.appendChild(addBtn);
-	menu.appendChild(newProject);
+	form.appendChild(label);
+	form.appendChild(input);
+	form.appendChild(addBtn);
+	menu.appendChild(form);
 
 	return menu;
 };
