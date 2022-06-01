@@ -31,7 +31,7 @@ export const Form = (currentProject, editTodo = false) => {
 
 	const close = document.createElement("button");
 	close.classList.add("close-modal");
-	close.innerText = "X";
+	close.textContent = "X";
 	modal.appendChild(close);
 
 	const form = document.createElement("form");
@@ -41,7 +41,7 @@ export const Form = (currentProject, editTodo = false) => {
 	const name = document.createElement("div");
 	const nameLabel = document.createElement("label");
 	nameLabel.setAttribute("for", "name");
-	nameLabel.innerText = "Name";
+	nameLabel.textContent = "Name";
 	const nameInput = document.createElement("input");
 	nameInput.setAttribute("type", "text");
 	nameInput.setAttribute("name", "name");
@@ -57,7 +57,7 @@ export const Form = (currentProject, editTodo = false) => {
 	const details = document.createElement("div");
 	const detailsLabel = document.createElement("label");
 	detailsLabel.setAttribute("for", "details");
-	detailsLabel.innerText = "Details";
+	detailsLabel.textContent = "Details";
 	const detailsInput = document.createElement("textarea");
 	detailsInput.setAttribute("name", "details");
 	detailsInput.setAttribute("id", "details");
@@ -69,7 +69,7 @@ export const Form = (currentProject, editTodo = false) => {
 	const dueDate = document.createElement("div");
 	const dueDateLabel = document.createElement("label");
 	dueDateLabel.setAttribute("for", "dueDate");
-	dueDateLabel.innerText = "Due Date";
+	dueDateLabel.textContent = "Due Date";
 	const dueDateInput = document.createElement("input");
 	dueDateInput.setAttribute("type", "date");
 	dueDateInput.setAttribute("name", "dueDate");
@@ -101,14 +101,14 @@ export const Form = (currentProject, editTodo = false) => {
 	const reset = document.createElement("button");
 	reset.setAttribute("type", "reset");
 	reset.setAttribute("id", "reset");
-	reset.innerText = "Clear";
+	reset.textContent = "Clear";
 	form.appendChild(reset);
 
 	const submit = document.createElement("button");
 	submit.setAttribute("type", "submit");
 	submit.setAttribute("id", "submit");
 	submit.setAttribute("value", "Save");
-	submit.innerText = "Save";
+	submit.textContent = "Save";
 	form.appendChild(submit);
 
 	return modal;
