@@ -44,6 +44,7 @@ export const userInterface = (() => {
 	function addProject(name) {
 		name = name.toLowerCase();
 		allProjects.push(name);
+
 		renderMenu();
 		viewProject(name);
 	}
@@ -63,17 +64,26 @@ export const userInterface = (() => {
 	function deleteProject(project) {
 		const index = allProjects.indexOf(project);
 		if (index > -1) allProjects.splice(index, 1);
+
 		renderMenu();
 		if (currentProject === project) viewHome();
+
 		todos.deleteProject(project);
 	}
 
 	/**
-	 * Delete existing todo
+	 * Delete existing todo component and associated todo
 	 *
-	 * @param {number} id
+	 * @param {HTMLTableRowElement} element
 	 */
-	function deleteTodo(id) {}
+	function deleteTodo(element) {
+		const id = element.dataset.todoId;
+
+		element.removeEventListener("click", handleTask);
+		element.remove();
+
+		todos.deleteTodo(id);
+	}
 
 	/**
 	 * Edit name of existing project folder
@@ -122,12 +132,10 @@ export const userInterface = (() => {
 		if (e.target.classList.contains("today")) viewToday();
 		if (e.target.classList.contains("upcoming")) viewUpcoming();
 		if (e.target.classList.contains("overdue")) viewOverdue();
-
 		if (e.target.hasAttribute("data-project"))
 			e.target.classList.contains("delete-project")
 				? deleteProject(e.target.dataset.project)
 				: viewProject(e.target.dataset.project);
-
 		if (e.type === "submit") addProject(e.target.elements.project.value);
 	}
 
@@ -139,13 +147,14 @@ export const userInterface = (() => {
 	function handleTask(e) {
 		const chevron = e.currentTarget.querySelector(".chevron");
 		const checkbox = e.currentTarget.querySelector(".toggle-complete");
+		const editBtn = e.currentTarget.querySelector(".edit-todo");
+		const deleteBtn = e.currentTarget.querySelector(".delete-todo");
 
-		if (e.target === e.currentTarget || chevron.contains(e.target))
+		if (chevron.contains(e.target) || e.target === e.currentTarget)
 			toggleDetails(e.currentTarget);
-
 		if (checkbox.contains(e.target)) toggleComplete(checkbox);
-
-		if (e.target.classList.contains("edit-todo")) renderForm();
+		if (editBtn.contains(e.target)) renderForm();
+		if (deleteBtn.contains(e.target)) deleteTodo(e.currentTarget);
 	}
 
 	/**
@@ -273,7 +282,7 @@ export const userInterface = (() => {
 	 */
 	function toggleComplete(element) {
 		const icon = document.createElement("i");
-		const id = element.dataset.todoId;
+		const id = element.parentNode.dataset.todoId;
 
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);

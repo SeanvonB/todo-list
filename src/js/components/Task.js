@@ -11,6 +11,7 @@ import { format, formatDistanceToNow, parseISO } from "date-fns";
 export const Task = (todo) => {
 	const details = todo.details.trim();
 	const row = document.createElement("tr");
+	row.setAttribute("data-todo-id", todo.id);
 
 	const chevron = document.createElement("td");
 	chevron.classList.add("chevron");
@@ -24,7 +25,6 @@ export const Task = (todo) => {
 
 	const complete = document.createElement("td");
 	const completeBtn = document.createElement("button");
-	completeBtn.setAttribute("data-todo-id", todo.id);
 	completeBtn.classList.add("toggle-complete");
 	const completeIcon = document.createElement("i");
 	if (todo.complete === true) {
@@ -59,13 +59,21 @@ export const Task = (todo) => {
 
 	const edit = document.createElement("td");
 	const editBtn = document.createElement("button");
-	editBtn.setAttribute("data-todo-id", todo.id);
 	editBtn.classList.add("edit-todo");
 	const editIcon = document.createElement("i");
 	editIcon.classList.add("fas", "fa-ellipsis-v");
 	editBtn.appendChild(editIcon);
 	edit.appendChild(editBtn);
 	row.appendChild(edit);
+
+	const deleteTodo = document.createElement("td");
+	const deleteBtn = document.createElement("button");
+	deleteBtn.classList.add("delete-todo");
+	const deleteIcon = document.createElement("i");
+	deleteIcon.classList.add("far", "fa-times-circle");
+	deleteBtn.appendChild(deleteIcon);
+	deleteTodo.appendChild(deleteBtn);
+	row.appendChild(deleteTodo);
 
 	const detailsDrawer = document.createElement("td");
 	detailsDrawer.classList.add("details");
