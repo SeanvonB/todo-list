@@ -104,19 +104,12 @@ export const userInterface = (() => {
 	 * @param {Event} e
 	 */
 	function handleHeader(e) {
-		let isAscending;
-		if (e.target instanceof HTMLButtonElement) {
-			isAscending = toggleAscending(e.target);
-		}
+		const isAscending = toggleAscending(e.target);
 
-		let column;
-		if (e.target.classList.contains("name")) column = 2;
-		if (e.target.classList.contains("due-date")) column = 3;
-		if (e.target.classList.contains("complete")) column = 4;
-		if (e.target.classList.contains("urgent")) column = 5;
-		if (e.target.classList.contains("created")) column = 6;
-
-		sortTable(column, isAscending);
+		if (e.target.classList.contains("complete")) sortTable(2, isAscending);
+		if (e.target.classList.contains("name")) sortTable(3, isAscending);
+		if (e.target.classList.contains("due-date")) sortTable(4, isAscending);
+		if (e.target.classList.contains("created")) sortTable(5, isAscending);
 	}
 
 	/**
@@ -143,7 +136,17 @@ export const userInterface = (() => {
 	 *
 	 * @param {Event} e
 	 */
-	function handleTask(e) {}
+	function handleTask(e) {
+		const chevron = e.currentTarget.querySelector(".chevron");
+		const checkbox = e.currentTarget.querySelector(".toggle-complete");
+
+		if (e.target === e.currentTarget || chevron.contains(e.target))
+			toggleDetails(e.currentTarget);
+
+		if (checkbox.contains(e.target)) toggleComplete(checkbox);
+
+		if (e.target.classList.contains("edit-todo")) renderForm();
+	}
 
 	/**
 	 * Render add/edit form in modal
@@ -163,9 +166,8 @@ export const userInterface = (() => {
 	 * Render sortable header section of todoTable
 	 */
 	function renderHeader() {
-		const previousRow = tableHead.querySelector("tr");
-		if (previousRow) previousRow.removeEventListener("click", handleHeader);
 		while (tableHead.firstChild) {
+			tableHead.firstChild.removeEventListener("click", handleHeader);
 			tableHead.removeChild(tableHead.firstChild);
 		}
 
@@ -182,6 +184,7 @@ export const userInterface = (() => {
 		if (previousForm)
 			previousForm.removeEventListener("submit", handleMenu);
 		while (navContainer.firstChild) {
+			navContainer.firstChild.removeEventListener("click", handleMenu);
 			navContainer.removeChild(navContainer.firstChild);
 		}
 
@@ -199,11 +202,13 @@ export const userInterface = (() => {
 	 */
 	function renderTasks(todos) {
 		while (tableBody.firstChild) {
+			tableBody.firstChild.removeEventListener("click", handleTask);
 			tableBody.removeChild(tableBody.firstChild);
 		}
 
 		for (let todo of todos) {
 			const row = Task(todo);
+			row.addEventListener("click", handleTask);
 			tableBody.appendChild(row);
 		}
 	}
@@ -228,6 +233,7 @@ export const userInterface = (() => {
 		rows.sort((row1, row2) => {
 			const value1 = row1.querySelector(select).textContent;
 			const value2 = row2.querySelector(select).textContent;
+
 			return ascending
 				? sortAsc(value1, value2)
 				: sortDesc(value1, value2);
@@ -245,30 +251,96 @@ export const userInterface = (() => {
 		if (element.classList.contains("ascending")) {
 			element.classList.remove("ascending");
 			element.classList.add("descending");
+
 			return false;
 		}
 		if (element.classList.contains("descending")) {
 			element.classList.remove("descending");
 			element.classList.add("ascending");
+
 			return true;
 		}
 		element.classList.add("ascending");
+
 		return true;
 	}
 
 	/**
-	 * Toggle complete status of todo with given id
+	 * Toggle complete status of given element
 	 *
-	 * @param {number} id
+	 * @param {HTMLButtonElement} element
+	 * @returns {boolean} isComplete
 	 */
-	function toggleComplete(id) {}
+	function toggleComplete(element) {
+		const icon = document.createElement("i");
+		const id = element.dataset.todoId;
+
+		while (element.firstChild) {
+			element.removeChild(element.firstChild);
+		}
+
+		if (element.classList.contains("complete")) {
+			element.classList.remove("complete");
+			element.classList.add("incomplete");
+			element.parentNode.classList.remove("complete");
+			element.parentNode.classList.add("incomplete");
+			icon.classList.add("far", "fa-circle");
+			element.appendChild(icon);
+
+			todos.toggleComplete(id);
+
+			return false;
+		}
+		if (element.classList.contains("incomplete")) {
+			element.classList.remove("incomplete");
+			element.classList.add("complete");
+			element.parentNode.classList.remove("incomplete");
+			element.parentNode.classList.add("complete");
+			icon.classList.add("far", "fa-check-circle");
+			element.appendChild(icon);
+
+			todos.toggleComplete(id);
+
+			return true;
+		}
+	}
 
 	/**
-	 * Toggle urgent status of todo with given id
+	 * Toggle show/hide status of given element
 	 *
-	 * @param {number} id
+	 * @param {HTMLTableRowElement} element
+	 * @returns {boolean} isShown
 	 */
-	function toggleUrgent(id) {}
+	function toggleDetails(element) {
+		const chevron = element.querySelector(".chevron");
+		const detailsDrawer = element.querySelector(".details");
+		const icon = document.createElement("i");
+
+		while (chevron.firstChild) {
+			chevron.removeChild(chevron.firstChild);
+		}
+
+		if (chevron.classList.contains("hide-details")) {
+			chevron.classList.remove("hide-details");
+			chevron.classList.add("show-details");
+			detailsDrawer.classList.remove("hide-details");
+			detailsDrawer.classList.add("show-details");
+			icon.classList.add("fas", "fa-chevron-down");
+			chevron.appendChild(icon);
+
+			return true;
+		}
+		if (chevron.classList.contains("show-details")) {
+			chevron.classList.remove("show-details");
+			chevron.classList.add("hide-details");
+			detailsDrawer.classList.remove("show-details");
+			detailsDrawer.classList.add("hide-details");
+			icon.classList.add("fas", "fa-chevron-right");
+			chevron.appendChild(icon);
+
+			return false;
+		}
+	}
 
 	/**
 	 * Update currently viewed project folder
@@ -300,7 +372,7 @@ export const userInterface = (() => {
 	function viewOverdue() {
 		const today = new Date().toISOString().split("T")[0];
 		const overdueTodos = allTodos.filter((todo) => {
-			if (todo.dueDate) return todo.dueDate.split("T")[0] <= today;
+			if (todo.dueDate) return todo.dueDate.split("T")[0] < today;
 		});
 
 		updateCurrent("overdue");
@@ -348,7 +420,7 @@ export const userInterface = (() => {
 		const upcomingTodos = allTodos.filter((todo) => {
 			if (todo.dueDate)
 				return (
-					todo.dueDate.split("T")[0] >= today &&
+					todo.dueDate.split("T")[0] > today &&
 					todo.dueDate.split("T")[0] <= nextWeek
 				);
 		});

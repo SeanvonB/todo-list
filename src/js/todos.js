@@ -17,15 +17,13 @@ export const todos = (() => {
 	 * @param {Object} [dueDate = null]
 	 * @param {string} [project = null]
 	 * @param {boolean} [complete = false]
-	 * @param {boolean} [urgent = false]
 	 */
 	function addTodo(
 		name,
 		details = "",
 		dueDate = null,
 		project = null,
-		complete = false,
-		urgent = false
+		complete = false
 	) {
 		const created = new Date();
 		const id = Math.floor(Math.random() * Date.now());
@@ -34,7 +32,7 @@ export const todos = (() => {
 		 * Date objects will be converted to strings for localStorage; doing
 		 * so immediately just ensures consistent type.
 		 */
-		dueDate = dueDate.toISOString();
+		if (dueDate) dueDate = dueDate.toISOString();
 
 		allTodos.push({
 			name,
@@ -42,7 +40,6 @@ export const todos = (() => {
 			dueDate,
 			project,
 			complete,
-			urgent,
 			created,
 			id,
 		});
@@ -67,6 +64,7 @@ export const todos = (() => {
 	 * @param {number} id
 	 */
 	function deleteTodo(id) {
+		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) allTodos.splice(index, 1);
 		save();
@@ -80,6 +78,7 @@ export const todos = (() => {
 	 * @param {*} value
 	 */
 	function editTodo(id, property, value) {
+		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1 && allTodos[index][property]) {
 			allTodos[index][property] = value;
@@ -119,26 +118,12 @@ export const todos = (() => {
 	 * @param {number} id
 	 */
 	function toggleComplete(id) {
+		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) {
 			allTodos[index].complete === false
 				? (allTodos[index].complete = true)
 				: (allTodos[index].complete = false);
-		}
-		save();
-	}
-
-	/**
-	 * Toggle urgent status of todo with given id
-	 *
-	 * @param {number} id
-	 */
-	function toggleUrgent(id) {
-		const index = allTodos.findIndex((todo) => todo.id === id);
-		if (index > -1) {
-			allTodos[index].urgent === false
-				? (allTodos[index].urgent = true)
-				: (allTodos[index].urgent = false);
 		}
 		save();
 	}
@@ -150,6 +135,5 @@ export const todos = (() => {
 		deleteProject,
 		getAll,
 		toggleComplete,
-		toggleUrgent,
 	};
 })();

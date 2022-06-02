@@ -11,6 +11,14 @@ export const Header = () => {
 	const chevronHeader = document.createElement("th");
 	row.appendChild(chevronHeader);
 
+	const completeHeader = document.createElement("th");
+	completeHeader.setAttribute("scope", "col");
+	const completeBtn = document.createElement("button");
+	completeBtn.classList.add("complete");
+	completeBtn.textContent = "Complete";
+	completeHeader.appendChild(completeBtn);
+	row.appendChild(completeHeader);
+
 	const nameHeader = document.createElement("th");
 	nameHeader.setAttribute("scope", "col");
 	const nameBtn = document.createElement("button");
@@ -26,22 +34,6 @@ export const Header = () => {
 	dueBtn.textContent = "Due Date";
 	dueHeader.appendChild(dueBtn);
 	row.appendChild(dueHeader);
-
-	const completeHeader = document.createElement("th");
-	completeHeader.setAttribute("scope", "col");
-	const completeBtn = document.createElement("button");
-	completeBtn.classList.add("complete");
-	completeBtn.textContent = "Complete";
-	completeHeader.appendChild(completeBtn);
-	row.appendChild(completeHeader);
-
-	const urgentHeader = document.createElement("th");
-	urgentHeader.setAttribute("scope", "col");
-	const urgentBtn = document.createElement("button");
-	urgentBtn.classList.add("urgent");
-	urgentBtn.textContent = "Urgent";
-	urgentHeader.appendChild(urgentBtn);
-	row.appendChild(urgentHeader);
 
 	const createdHeader = document.createElement("th");
 	createdHeader.setAttribute("scope", "col");
