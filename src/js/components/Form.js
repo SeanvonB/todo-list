@@ -35,6 +35,7 @@ export const Form = (currentProject, editTodo = false) => {
 	modal.appendChild(close);
 
 	const form = document.createElement("form");
+	form.setAttribute("autocomplete", "off");
 	form.setAttribute("method", "dialog");
 	modal.appendChild(form);
 
@@ -61,7 +62,7 @@ export const Form = (currentProject, editTodo = false) => {
 	const detailsInput = document.createElement("textarea");
 	detailsInput.setAttribute("name", "details");
 	detailsInput.setAttribute("id", "details");
-	if (editTodo.details) detailsInput.setAttribute("value", editTodo.details);
+	if (editTodo.details) detailsInput.value = editTodo.details;
 	details.appendChild(detailsLabel);
 	details.appendChild(detailsInput);
 	form.appendChild(details);
@@ -74,12 +75,10 @@ export const Form = (currentProject, editTodo = false) => {
 	dueDateInput.setAttribute("type", "date");
 	dueDateInput.setAttribute("name", "dueDate");
 	dueDateInput.setAttribute("id", "dueDate");
-	dueDateInput.setAttribute("min", new Date().toISOString().split("T")[0]);
-	if (editTodo.dueDate)
-		dueDateInput.setAttribute(
-			"value",
-			editTodo.dueDate.toISOString().split("T")[0]
-		);
+	if (editTodo.dueDate) {
+		const dueDate = editTodo.dueDate.split("T")[0];
+		dueDateInput.setAttribute("value", dueDate);
+	}
 	dueDate.appendChild(dueDateLabel);
 	dueDate.appendChild(dueDateInput);
 	form.appendChild(dueDate);
@@ -91,11 +90,18 @@ export const Form = (currentProject, editTodo = false) => {
 	projectInput.setAttribute("value", currentProject);
 	form.appendChild(projectInput);
 
+	const idInput = document.createElement("input");
+	idInput.setAttribute("type", "hidden");
+	idInput.setAttribute("name", "id");
+	idInput.setAttribute("id", "id");
+	if (editTodo.id) idInput.setAttribute("value", editTodo.id);
+	form.appendChild(idInput);
+
 	const editInput = document.createElement("input");
 	editInput.setAttribute("type", "hidden");
 	editInput.setAttribute("name", "edit");
 	editInput.setAttribute("id", "edit");
-	editInput.setAttribute("value", editTodo ? true : false);
+	if (editTodo) editInput.setAttribute("value", "true");
 	form.appendChild(editInput);
 
 	const reset = document.createElement("button");

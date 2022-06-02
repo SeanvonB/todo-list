@@ -15,9 +15,10 @@ export const userInterface = (() => {
 	let currentProject = "";
 
 	// DOM Elements
-	const addButton = document.querySelector(".add-todo");
-	const mainContainer = document.querySelector("main");
-	const navContainer = document.querySelector("nav");
+	const addButton = document.querySelector("button.add-todo");
+	const dialogContainer = document.querySelector("aside.dialog-container");
+	const mainContainer = document.querySelector("main.main-container");
+	const navContainer = document.querySelector("nav.nav-container");
 	const tableBody = document.querySelector("tbody");
 	const tableHead = document.querySelector("thead");
 
@@ -32,6 +33,8 @@ export const userInterface = (() => {
 			}
 		}
 
+		addButton.addEventListener("click", () => renderForm());
+
 		renderMenu();
 		viewHome();
 	}
@@ -42,7 +45,6 @@ export const userInterface = (() => {
 	 * @param {string} name
 	 */
 	function addProject(name) {
-		name = name.toLowerCase();
 		allProjects.push(name);
 
 		renderMenu();
@@ -54,7 +56,21 @@ export const userInterface = (() => {
 	 *
 	 * @param {Object} form
 	 */
-	function addTodo(form) {}
+	function addTodo(form) {
+		const name = form.name.value;
+		const details = form.details.value;
+
+		let dueDate = form.dueDate.value;
+		if (dueDate) dueDate = new Date(dueDate);
+
+		todos.addTodo(name, details, dueDate, currentProject);
+		allTodos = todos.getAll();
+
+		const newTodo = allTodos[allTodos.length - 1];
+		const newRow = Task(newTodo);
+		newRow.addEventListener("click", handleTask);
+		tableBody.appendChild(newRow);
+	}
 
 	/**
 	 * Delete existing project folder and associated todos
@@ -69,6 +85,7 @@ export const userInterface = (() => {
 		if (currentProject === project) viewHome();
 
 		todos.deleteProject(project);
+		allTodos = todos.getAll();
 	}
 
 	/**
@@ -79,10 +96,11 @@ export const userInterface = (() => {
 	function deleteTodo(element) {
 		const id = element.dataset.todoId;
 
+		todos.deleteTodo(id);
+		allTodos = todos.getAll();
+
 		element.removeEventListener("click", handleTask);
 		element.remove();
-
-		todos.deleteTodo(id);
 	}
 
 	/**
@@ -99,14 +117,39 @@ export const userInterface = (() => {
 	 * @param {number} id
 	 * @param {Object} form
 	 */
-	function editTodo(id, form) {}
+	function editTodo(id, form) {
+		const name = form.name.value;
+		const details = form.details.value;
+		const todo = allTodos.find((todo) => todo.id == id);
+
+		let dueDate = form.dueDate.value;
+		if (dueDate) dueDate = new Date(dueDate);
+
+		if (name !== todo.name) todos.editTodo(id, "name", name);
+		if (details !== todo.details) todos.editTodo(id, "details", details);
+		if (dueDate !== todo.dueDate) todos.editTodo(id, "dueDate", dueDate);
+		allTodos = todos.getAll();
+
+		const newTodo = allTodos.find((todo) => todo.id == id);
+		const newRow = Task(newTodo);
+		newRow.addEventListener("click", handleTask);
+		const oldRow = tableBody.querySelector(`[data-todo-id="${id}"]`);
+		oldRow.removeEventListener("click", handleTask);
+		oldRow.replaceWith(newRow);
+	}
 
 	/**
 	 * Handle user input to form component
 	 *
 	 * @param {Event} e
 	 */
-	function handleForm(e) {}
+	function handleForm(e) {
+		const form = e.target.elements;
+		const id = form.id.value;
+		const editMode = form.edit.value;
+
+		editMode ? editTodo(id, form) : addTodo(form);
+	}
 
 	/**
 	 * Handle user input to header component
@@ -136,7 +179,10 @@ export const userInterface = (() => {
 			e.target.classList.contains("delete-project")
 				? deleteProject(e.target.dataset.project)
 				: viewProject(e.target.dataset.project);
-		if (e.type === "submit") addProject(e.target.elements.project.value);
+		if (e.type === "submit") {
+			const name = e.target.elements.project.value.toLowerCase();
+			addProject(name);
+		}
 	}
 
 	/**
@@ -149,11 +195,13 @@ export const userInterface = (() => {
 		const checkbox = e.currentTarget.querySelector(".toggle-complete");
 		const editBtn = e.currentTarget.querySelector(".edit-todo");
 		const deleteBtn = e.currentTarget.querySelector(".delete-todo");
+		const id = e.currentTarget.dataset.todoId;
+		const todo = allTodos.find((todo) => todo.id == id);
 
 		if (chevron.contains(e.target) || e.target === e.currentTarget)
 			toggleDetails(e.currentTarget);
 		if (checkbox.contains(e.target)) toggleComplete(checkbox);
-		if (editBtn.contains(e.target)) renderForm();
+		if (editBtn.contains(e.target)) renderForm(todo);
 		if (deleteBtn.contains(e.target)) deleteTodo(e.currentTarget);
 	}
 
@@ -167,8 +215,14 @@ export const userInterface = (() => {
 	 * @param {Object} [editTodo = false]
 	 */
 	function renderForm(editTodo = false) {
+		while (dialogContainer.firstChild) {
+			dialogContainer.firstChild.removeEventListener("click", handleForm);
+			dialogContainer.removeChild(dialogContainer.firstChild);
+		}
+
 		const form = Form(currentProject, editTodo);
-		mainContainer.appendChild(form);
+		form.addEventListener("submit", handleForm);
+		dialogContainer.appendChild(form);
 	}
 
 	/**
@@ -282,7 +336,7 @@ export const userInterface = (() => {
 	 */
 	function toggleComplete(element) {
 		const icon = document.createElement("i");
-		const id = element.parentNode.dataset.todoId;
+		const id = element.closest("tr").dataset.todoId;
 
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
