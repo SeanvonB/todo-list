@@ -81,11 +81,11 @@ export const userInterface = (() => {
 		const index = allProjects.indexOf(project);
 		if (index > -1) allProjects.splice(index, 1);
 
-		renderMenu();
-		if (currentProject === project) viewHome();
-
 		todos.deleteProject(project);
 		allTodos = todos.getAll();
+
+		renderMenu();
+		project === currentProject ? viewHome() : viewCurrent();
 	}
 
 	/**
@@ -418,6 +418,28 @@ export const userInterface = (() => {
 
 		currentProject = name;
 		navContainer.querySelector(`li.${name}`).classList.add("current");
+	}
+
+	/**
+	 * Refresh current view
+	 */
+	function viewCurrent() {
+		switch (currentProject) {
+			case "home":
+				viewHome();
+				break;
+			case "today":
+				viewToday();
+				break;
+			case "upcoming":
+				viewUpcoming();
+				break;
+			case "overdue":
+				viewOverdue;
+				break;
+			default:
+				viewProject(currentProject);
+		}
 	}
 
 	/**
