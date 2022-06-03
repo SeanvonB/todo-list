@@ -33,7 +33,7 @@ export const Task = (todo) => {
 		completeIcon.classList.add("far", "fa-check-circle");
 	}
 	if (todo.complete === false) {
-		complete.classList.add("complete");
+		complete.classList.add("incomplete");
 		completeBtn.classList.add("incomplete");
 		completeIcon.classList.add("far", "fa-circle");
 	}

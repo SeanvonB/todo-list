@@ -286,6 +286,11 @@ export const userInterface = (() => {
 		const rows = [...tableBody.querySelectorAll("tr")];
 		const select = `td:nth-child(${column})`;
 
+		let criteria = (row) => row.querySelector(select).textContent;
+		if (column === 2) {
+			criteria = (row) => row.querySelector(select).className;
+		}
+
 		function sortAsc(a, b) {
 			return a > b ? 1 : a < b ? -1 : 0;
 		}
@@ -294,8 +299,8 @@ export const userInterface = (() => {
 		}
 
 		rows.sort((row1, row2) => {
-			const value1 = row1.querySelector(select).textContent;
-			const value2 = row2.querySelector(select).textContent;
+			const value1 = criteria(row1);
+			const value2 = criteria(row2);
 
 			return ascending
 				? sortAsc(value1, value2)
