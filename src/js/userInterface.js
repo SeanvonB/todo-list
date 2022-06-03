@@ -144,11 +144,20 @@ export const userInterface = (() => {
 	 * @param {Event} e
 	 */
 	function handleForm(e) {
-		const form = e.target.elements;
-		const id = +form.id.value;
-		const editMode = form.edit.value;
+		const closeBtn = e.currentTarget.querySelector("button.close-modal");
 
-		editMode ? editTodo(id, form) : addTodo(form);
+		if (e.target === e.currentTarget || closeBtn.contains(e.target)) {
+			e.currentTarget.removeEventListener("click", handleForm);
+			e.currentTarget.removeEventListener("submit", handleForm);
+			e.currentTarget.remove();
+		}
+		if (e.type === "submit") {
+			const form = e.target.elements;
+			const id = +form.id.value;
+			const editMode = form.edit.value;
+
+			editMode ? editTodo(id, form) : addTodo(form);
+		}
 	}
 
 	/**
@@ -217,10 +226,15 @@ export const userInterface = (() => {
 	function renderForm(editTodo = false) {
 		while (dialogContainer.firstChild) {
 			dialogContainer.firstChild.removeEventListener("click", handleForm);
+			dialogContainer.firstChild.removeEventListener(
+				"submit",
+				handleForm
+			);
 			dialogContainer.removeChild(dialogContainer.firstChild);
 		}
 
 		const form = Form(currentProject, editTodo);
+		form.addEventListener("click", handleForm);
 		form.addEventListener("submit", handleForm);
 		dialogContainer.appendChild(form);
 	}
