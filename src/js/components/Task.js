@@ -70,7 +70,7 @@ export const Task = (todo) => {
 	const deleteBtn = document.createElement("button");
 	deleteBtn.classList.add("delete-todo");
 	const deleteIcon = document.createElement("i");
-	deleteIcon.classList.add("far", "fa-times-circle");
+	deleteIcon.classList.add("fas", "fa-times");
 	deleteBtn.appendChild(deleteIcon);
 	deleteTodo.appendChild(deleteBtn);
 	row.appendChild(deleteTodo);

@@ -22,24 +22,26 @@ export const Form = (currentProject, editTodo = false) => {
 	}
 
 	const modal = document.createElement("dialog");
-	modal.classList.add("modal", "close-modal");
+	modal.classList.add("close-modal");
 	modal.setAttribute("open", "");
-
-	const header = document.createElement("h1");
-	editTodo
-		? (header.textContent = "Edit Todo")
-		: (header.textContent = "Add Todo");
-	modal.appendChild(header);
-
-	const close = document.createElement("button");
-	close.classList.add("close-modal");
-	close.textContent = "X";
-	modal.appendChild(close);
 
 	const form = document.createElement("form");
 	form.setAttribute("autocomplete", "off");
 	form.setAttribute("method", "dialog");
 	modal.appendChild(form);
+
+	const header = document.createElement("h1");
+	editTodo
+		? (header.textContent = "Edit Todo")
+		: (header.textContent = "Add Todo");
+	form.appendChild(header);
+
+	const close = document.createElement("button");
+	close.classList.add("close-modal");
+	const closeIcon = document.createElement("i");
+	closeIcon.classList.add("far", "fa-times-circle");
+	close.appendChild(closeIcon);
+	form.appendChild(close);
 
 	const name = document.createElement("div");
 	const nameLabel = document.createElement("label");

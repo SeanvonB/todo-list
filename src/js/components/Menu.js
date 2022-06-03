@@ -37,7 +37,9 @@ export const Menu = (projects = []) => {
 		const deleteBtn = document.createElement("button");
 		deleteBtn.setAttribute("data-project", project);
 		deleteBtn.classList.add("delete-project");
-		deleteBtn.textContent = "X";
+		const deleteIcon = document.createElement("i");
+		deleteIcon.classList.add("fas", "fa-times");
+		deleteBtn.appendChild(deleteIcon);
 		item.appendChild(deleteBtn);
 		menu.appendChild(item);
 	}
