@@ -108,12 +108,6 @@ export const Form = (currentProject, editTodo = false) => {
 	if (editTodo) editInput.setAttribute("value", "true");
 	form.appendChild(editInput);
 
-	const reset = document.createElement("button");
-	reset.setAttribute("type", "reset");
-	reset.setAttribute("id", "reset");
-	reset.textContent = "Clear";
-	form.appendChild(reset);
-
 	const submit = document.createElement("button");
 	submit.setAttribute("type", "submit");
 	submit.setAttribute("id", "submit");
