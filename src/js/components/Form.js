@@ -9,6 +9,8 @@
  * @param {Object} editTodo
  * @returns {HTMLFormElement}
  */
+import { format } from "date-fns";
+
 export const Form = (currentProject, editTodo = false) => {
 	if (
 		currentProject === "home" ||
@@ -76,8 +78,8 @@ export const Form = (currentProject, editTodo = false) => {
 	dueDateInput.setAttribute("name", "dueDate");
 	dueDateInput.setAttribute("id", "dueDate");
 	if (editTodo.dueDate) {
-		const dueDate = editTodo.dueDate.split("T")[0];
-		dueDateInput.setAttribute("value", dueDate);
+		const date = format(editTodo.dueDate, "yyyy-MM-dd");
+		dueDateInput.setAttribute("value", date);
 	}
 	dueDate.appendChild(dueDateLabel);
 	dueDate.appendChild(dueDateInput);

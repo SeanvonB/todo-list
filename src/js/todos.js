@@ -28,12 +28,6 @@ export const todos = (() => {
 		const created = new Date();
 		const id = Math.floor(Math.random() * Date.now());
 
-		/**
-		 * Date objects will be converted to strings for localStorage; doing
-		 * so immediately just ensures consistent type.
-		 */
-		if (dueDate) dueDate = dueDate.toISOString();
-
 		allTodos.push({
 			name,
 			details,
@@ -64,7 +58,6 @@ export const todos = (() => {
 	 * @param {number} id
 	 */
 	function deleteTodo(id) {
-		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) allTodos.splice(index, 1);
 		save();
@@ -78,9 +71,8 @@ export const todos = (() => {
 	 * @param {*} value
 	 */
 	function editTodo(id, property, value) {
-		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
-		if (index > -1 && allTodos[index][property]) {
+		if (index > -1) {
 			allTodos[index][property] = value;
 		}
 		save();
@@ -102,7 +94,17 @@ export const todos = (() => {
 	 */
 	function load() {
 		const token = window.localStorage.getItem("allTodos");
-		return token ? JSON.parse(token) : [];
+
+		if (token) {
+			const localTodos = JSON.parse(token);
+			for (let todo of localTodos) {
+				if (todo.dueDate) todo.dueDate = new Date(todo.dueDate);
+				todo.created = new Date(todo.created);
+			}
+			return localTodos;
+		}
+
+		return [];
 	}
 
 	/**
@@ -118,7 +120,6 @@ export const todos = (() => {
 	 * @param {number} id
 	 */
 	function toggleComplete(id) {
-		id = parseInt(id, 10);
 		const index = allTodos.findIndex((todo) => todo.id === id);
 		if (index > -1) {
 			allTodos[index].complete === false

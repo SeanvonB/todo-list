@@ -6,7 +6,7 @@
  * @param {Object} todo
  * @returns {HTMLTableRowElement}
  */
-import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 export const Task = (todo) => {
 	const details = todo.details.trim();
@@ -49,12 +49,12 @@ export const Task = (todo) => {
 	const dueDate = document.createElement("td");
 	dueDate.classList.add("due-date");
 	if (todo.dueDate)
-		dueDate.textContent = format(new Date(todo.dueDate), "MMM do, yyyy");
+		dueDate.textContent = format(todo.dueDate, "MMM do, yyyy");
 	row.appendChild(dueDate);
 
 	const created = document.createElement("td");
 	created.classList.add("created");
-	created.textContent = `${formatDistanceToNow(new Date(todo.created))} ago`;
+	created.textContent = `${formatDistanceToNow(todo.created)} ago`;
 	row.appendChild(created);
 
 	const edit = document.createElement("td");

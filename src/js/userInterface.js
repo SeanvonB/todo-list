@@ -61,7 +61,7 @@ export const userInterface = (() => {
 		const details = form.details.value;
 
 		let dueDate = form.dueDate.value;
-		if (dueDate) dueDate = new Date(dueDate);
+		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
 		todos.addTodo(name, details, dueDate, currentProject);
 		allTodos = todos.getAll();
@@ -94,7 +94,7 @@ export const userInterface = (() => {
 	 * @param {HTMLTableRowElement} element
 	 */
 	function deleteTodo(element) {
-		const id = element.dataset.todoId;
+		const id = +element.dataset.todoId;
 
 		todos.deleteTodo(id);
 		allTodos = todos.getAll();
@@ -120,17 +120,17 @@ export const userInterface = (() => {
 	function editTodo(id, form) {
 		const name = form.name.value;
 		const details = form.details.value;
-		const todo = allTodos.find((todo) => todo.id == id);
+		const todo = allTodos.find((todo) => todo.id === id);
 
 		let dueDate = form.dueDate.value;
-		if (dueDate) dueDate = new Date(dueDate);
+		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
 		if (name !== todo.name) todos.editTodo(id, "name", name);
 		if (details !== todo.details) todos.editTodo(id, "details", details);
 		if (dueDate !== todo.dueDate) todos.editTodo(id, "dueDate", dueDate);
 		allTodos = todos.getAll();
 
-		const newTodo = allTodos.find((todo) => todo.id == id);
+		const newTodo = allTodos.find((todo) => todo.id === id);
 		const newRow = Task(newTodo);
 		newRow.addEventListener("click", handleTask);
 		const oldRow = tableBody.querySelector(`[data-todo-id="${id}"]`);
@@ -145,7 +145,7 @@ export const userInterface = (() => {
 	 */
 	function handleForm(e) {
 		const form = e.target.elements;
-		const id = form.id.value;
+		const id = +form.id.value;
 		const editMode = form.edit.value;
 
 		editMode ? editTodo(id, form) : addTodo(form);
@@ -195,8 +195,8 @@ export const userInterface = (() => {
 		const checkbox = e.currentTarget.querySelector(".toggle-complete");
 		const editBtn = e.currentTarget.querySelector(".edit-todo");
 		const deleteBtn = e.currentTarget.querySelector(".delete-todo");
-		const id = e.currentTarget.dataset.todoId;
-		const todo = allTodos.find((todo) => todo.id == id);
+		const id = +e.currentTarget.dataset.todoId;
+		const todo = allTodos.find((todo) => todo.id === id);
 
 		if (chevron.contains(e.target) || e.target === e.currentTarget)
 			toggleDetails(e.currentTarget);
@@ -336,7 +336,7 @@ export const userInterface = (() => {
 	 */
 	function toggleComplete(element) {
 		const icon = document.createElement("i");
-		const id = element.closest("tr").dataset.todoId;
+		const id = +element.closest("tr").dataset.todoId;
 
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
@@ -455,9 +455,12 @@ export const userInterface = (() => {
 	 * Change view to overdue folder
 	 */
 	function viewOverdue() {
-		const today = new Date().toISOString().split("T")[0];
+		const today = new Date().toLocaleDateString().split("T")[0];
 		const overdueTodos = allTodos.filter((todo) => {
-			if (todo.dueDate) return todo.dueDate.split("T")[0] < today;
+			if (todo.dueDate) {
+				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
+				return dueDate < today;
+			}
 		});
 
 		updateCurrent("overdue");
@@ -484,9 +487,12 @@ export const userInterface = (() => {
 	 * Change view to today folder
 	 */
 	function viewToday() {
-		const today = new Date().toISOString().split("T")[0];
+		const today = new Date().toLocaleDateString().split("T")[0];
 		const todayTodos = allTodos.filter((todo) => {
-			if (todo.dueDate) return todo.dueDate.split("T")[0] === today;
+			if (todo.dueDate) {
+				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
+				return dueDate === today;
+			}
 		});
 
 		updateCurrent("today");
@@ -498,16 +504,15 @@ export const userInterface = (() => {
 	 * Change view to upcoming folder
 	 */
 	function viewUpcoming() {
-		const today = new Date().toISOString().split("T")[0];
+		const today = new Date().toLocaleDateString().split("T")[0];
 		let nextWeek = new Date();
 		nextWeek.setDate(new Date().getDate() + 7);
-		nextWeek = nextWeek.toISOString().split("T")[0];
+		nextWeek = nextWeek.toLocaleDateString().split("T")[0];
 		const upcomingTodos = allTodos.filter((todo) => {
-			if (todo.dueDate)
-				return (
-					todo.dueDate.split("T")[0] > today &&
-					todo.dueDate.split("T")[0] <= nextWeek
-				);
+			if (todo.dueDate) {
+				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
+				return dueDate > today && dueDate <= nextWeek;
+			}
 		});
 
 		updateCurrent("upcoming");
