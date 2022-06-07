@@ -63,7 +63,17 @@ export const userInterface = (() => {
 		let dueDate = form.dueDate.value;
 		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
-		todos.addTodo(name, details, dueDate, currentProject);
+		let project = form.project.value;
+		if (
+			project === "home" ||
+			project === "today" ||
+			project === "upcoming" ||
+			project === "overdue"
+		) {
+			project = null;
+		}
+
+		todos.addTodo(name, details, dueDate, project);
 		allTodos = todos.getAll();
 
 		const newTodo = allTodos[allTodos.length - 1];
@@ -157,6 +167,9 @@ export const userInterface = (() => {
 			const editMode = form.edit.value;
 
 			editMode ? editTodo(id, form) : addTodo(form);
+			e.currentTarget.removeEventListener("click", handleForm);
+			e.currentTarget.removeEventListener("submit", handleForm);
+			e.currentTarget.remove();
 		}
 	}
 
@@ -184,10 +197,17 @@ export const userInterface = (() => {
 		if (e.target.classList.contains("today")) viewToday();
 		if (e.target.classList.contains("upcoming")) viewUpcoming();
 		if (e.target.classList.contains("overdue")) viewOverdue();
-		if (e.target.hasAttribute("data-project"))
-			e.target.classList.contains("delete-project")
-				? deleteProject(e.target.dataset.project)
-				: viewProject(e.target.dataset.project);
+		if (e.target.closest("li")) {
+			if (e.target.closest("li").classList.contains("project")) {
+				const item = e.target.closest("li");
+				const button = item.querySelector("button.delete-project");
+				const project = item.dataset.project;
+
+				button.contains(e.target)
+					? deleteProject(project)
+					: viewProject(project);
+			}
+		}
 		if (e.type === "submit") {
 			const name = e.target.elements.project.value.toLowerCase();
 			addProject(name);
@@ -200,18 +220,16 @@ export const userInterface = (() => {
 	 * @param {Event} e
 	 */
 	function handleTask(e) {
-		const chevron = e.currentTarget.querySelector(".chevron");
-		const checkbox = e.currentTarget.querySelector(".toggle-complete");
-		const editBtn = e.currentTarget.querySelector(".edit-todo");
-		const deleteBtn = e.currentTarget.querySelector(".delete-todo");
+		const complete = e.currentTarget.querySelector(".toggle-complete");
+		const edit = e.currentTarget.querySelector(".edit-todo");
+		const deleteTarget = e.currentTarget.querySelector(".delete-todo");
 		const id = +e.currentTarget.dataset.todoId;
 		const todo = allTodos.find((todo) => todo.id === id);
 
-		if (chevron.contains(e.target) || e.target === e.currentTarget)
-			toggleDetails(e.currentTarget);
-		if (checkbox.contains(e.target)) toggleComplete(checkbox);
-		if (editBtn.contains(e.target)) renderForm(todo);
-		if (deleteBtn.contains(e.target)) deleteTodo(e.currentTarget);
+		if (complete.contains(e.target)) toggleComplete(complete);
+		else if (edit.contains(e.target)) renderForm(todo);
+		else if (deleteTarget.contains(e.target)) deleteTodo(e.currentTarget);
+		else toggleDetails(e.currentTarget);
 	}
 
 	/**
@@ -270,6 +288,7 @@ export const userInterface = (() => {
 		const form = menu.querySelector("form");
 		form.addEventListener("submit", handleMenu);
 		navContainer.appendChild(menu);
+		navContainer.appendChild(form);
 	}
 
 	/**
@@ -348,38 +367,39 @@ export const userInterface = (() => {
 	}
 
 	/**
-	 * Toggle complete status of given element
+	 * Toggle complete status of the button on given element
 	 *
-	 * @param {HTMLButtonElement} element
+	 * @param {HTMLTableCellElement} element
 	 * @returns {boolean} isComplete
 	 */
 	function toggleComplete(element) {
 		const icon = document.createElement("i");
 		const id = +element.closest("tr").dataset.todoId;
+		const button = element.querySelector("button");
 
-		while (element.firstChild) {
-			element.removeChild(element.firstChild);
+		while (button.firstChild) {
+			button.removeChild(button.firstChild);
 		}
 
-		if (element.classList.contains("complete")) {
+		if (button.classList.contains("complete")) {
+			button.classList.remove("complete");
+			button.classList.add("incomplete");
 			element.classList.remove("complete");
 			element.classList.add("incomplete");
-			element.parentNode.classList.remove("complete");
-			element.parentNode.classList.add("incomplete");
 			icon.classList.add("far", "fa-circle");
-			element.appendChild(icon);
+			button.appendChild(icon);
 
 			todos.toggleComplete(id);
 
 			return false;
 		}
-		if (element.classList.contains("incomplete")) {
+		if (button.classList.contains("incomplete")) {
+			button.classList.remove("incomplete");
+			button.classList.add("complete");
 			element.classList.remove("incomplete");
 			element.classList.add("complete");
-			element.parentNode.classList.remove("incomplete");
-			element.parentNode.classList.add("complete");
 			icon.classList.add("far", "fa-check-circle");
-			element.appendChild(icon);
+			button.appendChild(icon);
 
 			todos.toggleComplete(id);
 
@@ -395,30 +415,32 @@ export const userInterface = (() => {
 	 */
 	function toggleDetails(element) {
 		const chevron = element.querySelector(".chevron");
+
+		if (chevron.classList.contains("hidden")) return false;
+
+		const chevronBtn = chevron.querySelector("button");
 		const detailsDrawer = element.querySelector(".details");
 		const icon = document.createElement("i");
 
-		while (chevron.firstChild) {
-			chevron.removeChild(chevron.firstChild);
+		while (chevronBtn.firstChild) {
+			chevronBtn.removeChild(chevronBtn.firstChild);
 		}
 
-		if (chevron.classList.contains("hide-details")) {
-			chevron.classList.remove("hide-details");
-			chevron.classList.add("show-details");
-			detailsDrawer.classList.remove("hide-details");
-			detailsDrawer.classList.add("show-details");
+		if (detailsDrawer.classList.contains("hidden")) {
+			detailsDrawer.classList.remove("hidden");
+			chevronBtn.classList.remove("show-details");
+			chevronBtn.classList.add("hide-details");
 			icon.classList.add("fas", "fa-chevron-down");
-			chevron.appendChild(icon);
+			chevronBtn.appendChild(icon);
 
 			return true;
 		}
-		if (chevron.classList.contains("show-details")) {
-			chevron.classList.remove("show-details");
-			chevron.classList.add("hide-details");
-			detailsDrawer.classList.remove("show-details");
-			detailsDrawer.classList.add("hide-details");
+		if (!detailsDrawer.classList.contains("hidden")) {
+			detailsDrawer.classList.add("hidden");
+			chevronBtn.classList.remove("hide-details");
+			chevronBtn.classList.add("show-details");
 			icon.classList.add("fas", "fa-chevron-right");
-			chevron.appendChild(icon);
+			chevronBtn.appendChild(icon);
 
 			return false;
 		}
@@ -454,7 +476,7 @@ export const userInterface = (() => {
 				viewUpcoming();
 				break;
 			case "overdue":
-				viewOverdue;
+				viewOverdue();
 				break;
 			default:
 				viewProject(currentProject);

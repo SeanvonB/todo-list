@@ -6,7 +6,7 @@
  * @param {Object} todo
  * @returns {HTMLTableRowElement}
  */
-import { format, formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNowStrict } from "date-fns";
 
 export const Task = (todo) => {
 	const details = todo.details.trim();
@@ -15,17 +15,21 @@ export const Task = (todo) => {
 
 	const chevron = document.createElement("td");
 	chevron.classList.add("chevron");
-	const chevronIcon = document.createElement("i");
 	if (details) {
-		chevron.classList.add("hide-details");
+		const chevronBtn = document.createElement("button");
+		chevronBtn.classList.add("show-details");
+		const chevronIcon = document.createElement("i");
 		chevronIcon.classList.add("fas", "fa-chevron-right");
+		chevronBtn.appendChild(chevronIcon);
+		chevron.appendChild(chevronBtn);
+	} else {
+		chevron.classList.add("hidden");
 	}
-	chevron.appendChild(chevronIcon);
 	row.appendChild(chevron);
 
 	const complete = document.createElement("td");
+	complete.classList.add("toggle-complete");
 	const completeBtn = document.createElement("button");
-	completeBtn.classList.add("toggle-complete");
 	const completeIcon = document.createElement("i");
 	if (todo.complete === true) {
 		complete.classList.add("complete");
@@ -54,12 +58,12 @@ export const Task = (todo) => {
 
 	const created = document.createElement("td");
 	created.classList.add("created");
-	created.textContent = `${formatDistanceToNow(todo.created)} ago`;
+	created.textContent = `${formatDistanceToNowStrict(todo.created)} ago`;
 	row.appendChild(created);
 
 	const edit = document.createElement("td");
+	edit.classList.add("edit-todo");
 	const editBtn = document.createElement("button");
-	editBtn.classList.add("edit-todo");
 	const editIcon = document.createElement("i");
 	editIcon.classList.add("fas", "fa-ellipsis-v");
 	editBtn.appendChild(editIcon);
@@ -67,8 +71,8 @@ export const Task = (todo) => {
 	row.appendChild(edit);
 
 	const deleteTodo = document.createElement("td");
+	deleteTodo.classList.add("delete-todo");
 	const deleteBtn = document.createElement("button");
-	deleteBtn.classList.add("delete-todo");
 	const deleteIcon = document.createElement("i");
 	deleteIcon.classList.add("fas", "fa-times");
 	deleteBtn.appendChild(deleteIcon);
@@ -78,8 +82,12 @@ export const Task = (todo) => {
 	const detailsDrawer = document.createElement("td");
 	detailsDrawer.classList.add("details");
 	if (details) {
-		detailsDrawer.textContent = details;
-		detailsDrawer.classList.add("hide-details");
+		detailsDrawer.classList.add("hidden");
+		const detailsTxt = document.createElement("p");
+		detailsTxt.textContent = details;
+		detailsDrawer.appendChild(detailsTxt);
+	} else {
+		detailsDrawer.classList.add("none");
 	}
 	row.appendChild(detailsDrawer);
 

@@ -12,15 +12,6 @@
 import { format } from "date-fns";
 
 export const Form = (currentProject, editTodo = false) => {
-	if (
-		currentProject === "home" ||
-		currentProject === "today" ||
-		currentProject === "upcoming" ||
-		currentProject === "overdue"
-	) {
-		currentProject = null;
-	}
-
 	const modal = document.createElement("dialog");
 	modal.classList.add("close-modal");
 	modal.setAttribute("open", "");
@@ -35,13 +26,6 @@ export const Form = (currentProject, editTodo = false) => {
 		? (header.textContent = "Edit Todo")
 		: (header.textContent = "Add Todo");
 	form.appendChild(header);
-
-	const close = document.createElement("button");
-	close.classList.add("close-modal");
-	const closeIcon = document.createElement("i");
-	closeIcon.classList.add("far", "fa-times-circle");
-	close.appendChild(closeIcon);
-	form.appendChild(close);
 
 	const name = document.createElement("div");
 	const nameLabel = document.createElement("label");
@@ -59,18 +43,6 @@ export const Form = (currentProject, editTodo = false) => {
 	name.appendChild(nameInput);
 	form.appendChild(name);
 
-	const details = document.createElement("div");
-	const detailsLabel = document.createElement("label");
-	detailsLabel.setAttribute("for", "details");
-	detailsLabel.textContent = "Details";
-	const detailsInput = document.createElement("textarea");
-	detailsInput.setAttribute("name", "details");
-	detailsInput.setAttribute("id", "details");
-	if (editTodo.details) detailsInput.value = editTodo.details;
-	details.appendChild(detailsLabel);
-	details.appendChild(detailsInput);
-	form.appendChild(details);
-
 	const dueDate = document.createElement("div");
 	const dueDateLabel = document.createElement("label");
 	dueDateLabel.setAttribute("for", "dueDate");
@@ -86,6 +58,19 @@ export const Form = (currentProject, editTodo = false) => {
 	dueDate.appendChild(dueDateLabel);
 	dueDate.appendChild(dueDateInput);
 	form.appendChild(dueDate);
+
+	const details = document.createElement("div");
+	const detailsLabel = document.createElement("label");
+	detailsLabel.setAttribute("for", "details");
+	detailsLabel.textContent = "Details";
+	const detailsInput = document.createElement("textarea");
+	detailsInput.setAttribute("name", "details");
+	detailsInput.setAttribute("id", "details");
+	detailsInput.setAttribute("placeholder", "Optional");
+	if (editTodo.details) detailsInput.value = editTodo.details;
+	details.appendChild(detailsLabel);
+	details.appendChild(detailsInput);
+	form.appendChild(details);
 
 	const projectInput = document.createElement("input");
 	projectInput.setAttribute("type", "hidden");
@@ -114,6 +99,13 @@ export const Form = (currentProject, editTodo = false) => {
 	submit.setAttribute("value", "Save");
 	submit.textContent = "Save";
 	form.appendChild(submit);
+
+	const close = document.createElement("button");
+	close.classList.add("close-modal");
+	const closeIcon = document.createElement("i");
+	closeIcon.classList.add("far", "fa-times-circle");
+	close.appendChild(closeIcon);
+	form.appendChild(close);
 
 	return modal;
 };

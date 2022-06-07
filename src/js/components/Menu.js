@@ -29,16 +29,21 @@ export const Menu = (projects = []) => {
 	overdue.textContent = "Overdue";
 	menu.appendChild(overdue);
 
+	const hRule = document.createElement("hr");
+	menu.appendChild(hRule);
+
 	for (let project of projects) {
 		const item = document.createElement("li");
 		item.setAttribute("data-project", project);
-		item.classList.add(project);
-		item.textContent = project.charAt(0).toUpperCase() + project.slice(1);
+		item.classList.add("project", project);
+		const projectText = document.createElement("p");
+		projectText.textContent =
+			project.charAt(0).toUpperCase() + project.slice(1);
 		const deleteBtn = document.createElement("button");
-		deleteBtn.setAttribute("data-project", project);
 		deleteBtn.classList.add("delete-project");
 		const deleteIcon = document.createElement("i");
 		deleteIcon.classList.add("fas", "fa-times");
+		item.appendChild(projectText);
 		deleteBtn.appendChild(deleteIcon);
 		item.appendChild(deleteBtn);
 		menu.appendChild(item);
@@ -49,7 +54,7 @@ export const Menu = (projects = []) => {
 	form.setAttribute("method", "dialog");
 	const label = document.createElement("label");
 	label.setAttribute("for", "project");
-	label.textContent = "Add New Project";
+	label.textContent = "Add Project";
 	const input = document.createElement("input");
 	input.setAttribute("type", "text");
 	input.setAttribute("name", "project");
@@ -59,7 +64,9 @@ export const Menu = (projects = []) => {
 	const addBtn = document.createElement("button");
 	addBtn.setAttribute("type", "submit");
 	addBtn.setAttribute("id", "submit");
-	addBtn.textContent = "+";
+	const addIcon = document.createElement("i");
+	addIcon.classList.add("fas", "fa-plus");
+	addBtn.appendChild(addIcon);
 	form.appendChild(label);
 	form.appendChild(input);
 	form.appendChild(addBtn);
