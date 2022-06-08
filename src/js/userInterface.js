@@ -496,11 +496,10 @@ export const userInterface = (() => {
 	 * Change view to overdue folder
 	 */
 	function viewOverdue() {
-		const today = new Date().toLocaleDateString().split("T")[0];
+		const today = new Date(new Date().setHours(0, 0, 0, 0));
 		const overdueTodos = allTodos.filter((todo) => {
 			if (todo.dueDate) {
-				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
-				return dueDate < today;
+				return todo.dueDate < today;
 			}
 		});
 
@@ -528,11 +527,10 @@ export const userInterface = (() => {
 	 * Change view to today folder
 	 */
 	function viewToday() {
-		const today = new Date().toLocaleDateString().split("T")[0];
+		let today = new Date(new Date().setHours(0, 0, 0, 0));
 		const todayTodos = allTodos.filter((todo) => {
 			if (todo.dueDate) {
-				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
-				return dueDate === today;
+				return todo.dueDate.toString() === today.toString();
 			}
 		});
 
@@ -545,14 +543,12 @@ export const userInterface = (() => {
 	 * Change view to upcoming folder
 	 */
 	function viewUpcoming() {
-		const today = new Date().toLocaleDateString().split("T")[0];
+		const today = new Date(new Date().setHours(0, 0, 0, 0));
 		let nextWeek = new Date();
-		nextWeek.setDate(new Date().getDate() + 7);
-		nextWeek = nextWeek.toLocaleDateString().split("T")[0];
+		nextWeek.setDate(today.getDate() + 7);
 		const upcomingTodos = allTodos.filter((todo) => {
 			if (todo.dueDate) {
-				const dueDate = todo.dueDate.toLocaleDateString().split("T")[0];
-				return dueDate > today && dueDate <= nextWeek;
+				return todo.dueDate >= today && todo.dueDate <= nextWeek;
 			}
 		});
 
