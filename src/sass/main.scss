@@ -1,1 +1,277 @@
 @import "~modern-normalize/modern-normalize.css";
+
+body {
+	background-color: #555555;
+	display: grid;
+	font-size: 20px;
+	justify-items: center;
+	max-width: 100%;
+	width: 100vw;
+}
+
+button {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+dialog {
+	align-items: center;
+	background-color: rgba(255, 255, 255, 0.5);
+	border: none;
+	display: grid;
+	height: 100%;
+	justify-items: center;
+	left: 50%;
+	padding: 0;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+
+	form {
+		background-color: lightsalmon;
+		border-radius: 16px;
+		display: grid;
+		max-width: 400px;
+		padding: 24px;
+		position: relative;
+		width: 100%;
+
+		div {
+			display: grid;
+			grid-template-columns: 96px minmax(0, 1fr);
+			margin: 8px 0;
+
+			label {
+				padding-top: 4px;
+			}
+
+			textarea {
+				height: 96px;
+				padding-right: 12px;
+				resize: none;
+			}
+		}
+
+		button.close-modal {
+			align-items: center;
+			background-color: lightgreen;
+			border-radius: 100px;
+			display: grid;
+			font-size: 32px;
+			padding: 0;
+			position: absolute;
+			right: -8px;
+			top: -8px;
+		}
+
+		button#submit {
+			background-color: lightcyan;
+			border-radius: 8px;
+			border: 1px solid #000000;
+			height: 40px;
+			justify-self: end;
+			margin: 4px 0 0;
+			width: 80px;
+		}
+
+		h1 {
+			font-size: 32px;
+			margin: 0 0 24px;
+		}
+	}
+}
+
+footer {
+	align-items: center;
+	background-color: lightgreen;
+	display: grid;
+	grid-area: footer;
+	justify-items: center;
+}
+
+header {
+	align-items: center;
+	background-color: lightblue;
+	display: grid;
+	grid-area: header;
+	padding: 16px;
+
+	h1 {
+		font-size: 64px;
+		margin: 0;
+	}
+}
+
+main {
+	align-items: center;
+	background-color: lightyellow;
+	display: flex;
+	flex-direction: column;
+	grid-area: main;
+
+	table {
+		display: grid;
+		grid-template-rows: 40px 1fr;
+		overflow: scroll;
+		width: 100%;
+	}
+
+	thead {
+		background-color: lightcoral;
+		inset-block-start: 0;
+		position: sticky;
+
+		tr {
+			align-items: center;
+			display: grid;
+			grid-template-columns: 16px 80px 3fr 2fr 2fr 48px 48px;
+			grid-template-rows: 40px;
+		}
+	}
+
+	tbody {
+		tr {
+			align-items: center;
+			background-color: lightseagreen;
+			border-bottom: 1px solid #000000;
+			display: grid;
+			grid-template-columns: 48px 48px 3fr 2fr 2fr 48px 48px;
+
+			td {
+				overflow: hidden;
+				text-align: center;
+				text-overflow: ellipsis;
+				user-select: none;
+				white-space: nowrap;
+
+				button {
+					font-size: 20px;
+					padding: 8px;
+				}
+			}
+
+			.details {
+				align-items: center;
+				background-color: lightskyblue;
+				border-top: 1px solid #000000;
+				display: grid;
+				grid-column: 1/-1;
+				justify-items: center;
+				overflow: initial;
+				text-align: left;
+				text-overflow: initial;
+				user-select: initial;
+				white-space: initial;
+
+				p {
+					margin: 16px;
+					max-width: 400px;
+				}
+			}
+
+			.details.hidden,
+			.details.none {
+				display: none;
+			}
+		}
+	}
+
+	.add-todo {
+		background-color: lightcyan;
+		border-radius: 8px;
+		border: 1px solid #000000;
+		flex-shrink: 0;
+		height: 40px;
+		margin: 16px;
+		width: 120px;
+	}
+}
+
+nav {
+	background-color: lightpink;
+	display: flex;
+	flex-direction: column;
+	grid-area: nav;
+	padding: 16px;
+	width: 100%;
+
+	form {
+		align-items: center;
+		background-color: lightsalmon;
+		border-radius: 16px;
+		display: flex;
+		flex-direction: column;
+		margin: 8px 0;
+		padding: 8px;
+
+		button {
+			background: lightcyan;
+			border-radius: 8px;
+			border: 1px solid #000000;
+			height: 40px;
+			width: 40px;
+		}
+
+		input {
+			margin: 8px;
+			width: calc(100% - 16px);
+		}
+	}
+
+	ul {
+		display: grid;
+		font-size: 20px;
+		grid-template-columns: 100%;
+		list-style: none;
+		margin: 0;
+		overflow: scroll;
+		padding: 0;
+
+		hr {
+			width: 90%;
+		}
+	}
+
+	li {
+		align-items: center;
+		border-radius: 8px;
+		cursor: pointer;
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-rows: 24px;
+		padding: 8px;
+	}
+
+	li.current {
+		background: lightgreen;
+	}
+
+	li.project {
+		grid-template-columns: minmax(0, 1fr) 40px;
+
+		button {
+			padding: 8px;
+		}
+
+		p {
+			margin: 0;
+		}
+	}
+}
+
+#page {
+	display: grid;
+	height: 100vh;
+	max-width: 1200px;
+	width: 100%;
+
+	grid-template:
+		[row1-start] "header header header header" 128px [row1-end]
+		[row2-start] "nav main main main" 1fr [row2-end]
+		[row3-start] "nav main main main" 1fr [row3-end]
+		[row4-start] "nav main main main" 1fr [row4-end]
+		[row5-start] "footer footer footer footer" 64px [row5-end]
+		/ 25%;
+}
