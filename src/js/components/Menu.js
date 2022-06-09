@@ -75,13 +75,13 @@ export const Menu = (projects = []) => {
 	const form = document.createElement("form");
 	form.setAttribute("autocomplete", "off");
 	form.setAttribute("method", "dialog");
-	const label = document.createElement("label");
-	label.setAttribute("for", "project");
-	label.textContent = "Add Project";
+	const inputWrapper = document.createElement("div");
+	inputWrapper.classList.add("input-wrapper");
 	const input = document.createElement("input");
 	input.setAttribute("type", "text");
 	input.setAttribute("name", "project");
 	input.setAttribute("id", "project");
+	input.setAttribute("placeholder", "Name");
 	input.setAttribute("minlength", "1");
 	input.setAttribute("required", "");
 	const addBtn = document.createElement("button");
@@ -89,10 +89,14 @@ export const Menu = (projects = []) => {
 	addBtn.setAttribute("id", "submit");
 	const addIcon = document.createElement("i");
 	addIcon.classList.add("fas", "fa-plus");
+	const label = document.createElement("label");
+	label.setAttribute("for", "project");
+	label.textContent = "Add Project";
 	addBtn.appendChild(addIcon);
+	inputWrapper.appendChild(input);
+	inputWrapper.appendChild(addBtn);
 	form.appendChild(label);
-	form.appendChild(input);
-	form.appendChild(addBtn);
+	form.appendChild(inputWrapper);
 	menu.appendChild(form);
 
 	return menu;

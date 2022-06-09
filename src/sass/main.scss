@@ -183,6 +183,7 @@ main {
 		border-radius: 8px;
 		border: 1px solid #000000;
 		flex-shrink: 0;
+		font-size: 16px;
 		height: 40px;
 		margin: 16px;
 		width: 120px;
@@ -194,29 +195,41 @@ nav {
 	display: flex;
 	flex-direction: column;
 	grid-area: nav;
-	padding: 16px;
 	width: 100%;
 
 	form {
 		align-items: center;
 		background-color: lightsalmon;
 		border-radius: 16px;
-		display: flex;
-		flex-direction: column;
-		margin: 8px 0;
-		padding: 8px;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		margin: 0 8px 16px;
+		padding: 8px 16px 16px;
 
-		button {
-			background: lightcyan;
+		.input-wrapper {
+			background-color: lightcyan;
 			border-radius: 8px;
 			border: 1px solid #000000;
-			height: 40px;
-			width: 40px;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 40px;
+			grid-template-rows: 40px;
+			width: 100%;
+
+			button {
+				background-color: transparent;
+			}
+
+			input {
+				background-color: transparent;
+				border-radius: 8px 0 0 8px;
+				border: none;
+				padding: 8px;
+			}
 		}
 
-		input {
-			margin: 8px;
-			width: calc(100% - 16px);
+		label {
+			font-size: 16px;
+			margin-bottom: 8px;
 		}
 	}
 
@@ -225,7 +238,7 @@ nav {
 		list-style: none;
 		margin: 0;
 		overflow: scroll;
-		padding: 0;
+		padding: 16px;
 
 		h2 {
 			font-size: 20px;
