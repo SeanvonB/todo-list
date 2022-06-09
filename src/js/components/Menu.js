@@ -11,22 +11,42 @@ export const Menu = (projects = []) => {
 
 	const home = document.createElement("li");
 	home.classList.add("home");
-	home.textContent = "Home";
+	const homeIcon = document.createElement("i");
+	homeIcon.classList.add("fas", "fa-home");
+	const homeLabel = document.createElement("h2");
+	homeLabel.textContent = "Home";
+	home.appendChild(homeIcon);
+	home.appendChild(homeLabel);
 	menu.appendChild(home);
 
 	const today = document.createElement("li");
 	today.classList.add("today");
-	today.textContent = "Today";
+	const todayIcon = document.createElement("i");
+	todayIcon.classList.add("fas", "fa-calendar-day");
+	const todayLabel = document.createElement("h2");
+	todayLabel.textContent = "Today";
+	today.appendChild(todayIcon);
+	today.appendChild(todayLabel);
 	menu.appendChild(today);
 
 	const upcoming = document.createElement("li");
 	upcoming.classList.add("upcoming");
-	upcoming.textContent = "Upcoming";
+	const upcomingIcon = document.createElement("i");
+	upcomingIcon.classList.add("fas", "fa-calendar-week");
+	const upcomingLabel = document.createElement("h2");
+	upcomingLabel.textContent = "Upcoming";
+	upcoming.appendChild(upcomingIcon);
+	upcoming.appendChild(upcomingLabel);
 	menu.appendChild(upcoming);
 
 	const overdue = document.createElement("li");
 	overdue.classList.add("overdue");
-	overdue.textContent = "Overdue";
+	const overdueIcon = document.createElement("i");
+	overdueIcon.classList.add("fas", "fa-calendar-times");
+	const overdueLabel = document.createElement("h2");
+	overdueLabel.textContent = "Overdue";
+	overdue.appendChild(overdueIcon);
+	overdue.appendChild(overdueLabel);
 	menu.appendChild(overdue);
 
 	const hRule = document.createElement("hr");
@@ -36,14 +56,17 @@ export const Menu = (projects = []) => {
 		const item = document.createElement("li");
 		item.setAttribute("data-project", project);
 		item.classList.add("project", project);
-		const projectText = document.createElement("p");
-		projectText.textContent =
+		const projectIcon = document.createElement("i");
+		projectIcon.classList.add("fas", "fa-list");
+		const projectLabel = document.createElement("h2");
+		projectLabel.textContent =
 			project.charAt(0).toUpperCase() + project.slice(1);
 		const deleteBtn = document.createElement("button");
 		deleteBtn.classList.add("delete-project");
 		const deleteIcon = document.createElement("i");
 		deleteIcon.classList.add("fas", "fa-times");
-		item.appendChild(projectText);
+		item.appendChild(projectIcon);
+		item.appendChild(projectLabel);
 		deleteBtn.appendChild(deleteIcon);
 		item.appendChild(deleteBtn);
 		menu.appendChild(item);

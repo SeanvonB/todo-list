@@ -17,7 +17,6 @@ export const userInterface = (() => {
 	// DOM Elements
 	const addButton = document.querySelector("button.add-todo");
 	const dialogContainer = document.querySelector("aside.dialog-container");
-	const mainContainer = document.querySelector("main.main-container");
 	const navContainer = document.querySelector("nav.nav-container");
 	const tableBody = document.querySelector("tbody");
 	const tableHead = document.querySelector("thead");
@@ -193,13 +192,19 @@ export const userInterface = (() => {
 	 * @param {Event} e
 	 */
 	function handleMenu(e) {
-		if (e.target.classList.contains("home")) viewHome();
-		if (e.target.classList.contains("today")) viewToday();
-		if (e.target.classList.contains("upcoming")) viewUpcoming();
-		if (e.target.classList.contains("overdue")) viewOverdue();
+		if (e.type === "submit") {
+			const name = e.target.elements.project.value.toLowerCase();
+			addProject(name);
+			return;
+		}
+
 		if (e.target.closest("li")) {
-			if (e.target.closest("li").classList.contains("project")) {
-				const item = e.target.closest("li");
+			const item = e.target.closest("li");
+			if (item.classList.contains("home")) viewHome();
+			if (item.classList.contains("today")) viewToday();
+			if (item.classList.contains("upcoming")) viewUpcoming();
+			if (item.classList.contains("overdue")) viewOverdue();
+			if (item.classList.contains("project")) {
 				const button = item.querySelector("button.delete-project");
 				const project = item.dataset.project;
 
@@ -207,10 +212,6 @@ export const userInterface = (() => {
 					? deleteProject(project)
 					: viewProject(project);
 			}
-		}
-		if (e.type === "submit") {
-			const name = e.target.elements.project.value.toLowerCase();
-			addProject(name);
 		}
 	}
 
