@@ -21,12 +21,17 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		path: path.resolve(__dirname, "dist"),
+		clean: true,
 	},
 	module: {
 		rules: [
 			{
 				test: /\.(s(a|c)ss)$/,
 				use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+			},
+			{
+				test: /\.html$/,
+				loader: "html-loader",
 			},
 		],
 	},

@@ -189,11 +189,11 @@ header {
 	background-color: var(--brand-primary);
 	display: grid;
 	grid-area: header;
-	padding: 16px;
+	padding: 24px 24px 24px 32px;
 
-	h1 {
-		font-size: 64px;
-		margin: 0;
+	img {
+		height: 80px;
+		width: auto;
 	}
 }
 
@@ -201,7 +201,7 @@ main {
 	@extend %default-border-reverse;
 	align-items: center;
 	background-color: var(--neutral-highlight);
-	background-image: url(../img/paper_texture_dark.jpg);
+	background-image: url(../img/paper_texture.jpg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
