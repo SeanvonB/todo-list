@@ -103,7 +103,7 @@ export const Form = (currentProject, editTodo = false) => {
 	const close = document.createElement("button");
 	close.classList.add("close-modal");
 	const closeIcon = document.createElement("i");
-	closeIcon.classList.add("far", "fa-times-circle");
+	closeIcon.classList.add("fas", "fa-times");
 	close.appendChild(closeIcon);
 	form.appendChild(close);
 
