@@ -1,8 +1,41 @@
 @import "~modern-normalize/modern-normalize.css";
 
+:root {
+	--background-color: #555555;
+	--brand-primary: #ffcc00;
+	--brand-secondary: #ffeeaa;
+	--danger-color-active: #aa2222;
+	--danger-color: #cc2222;
+	--modal-filter: rgba(0, 0, 0, 0.5);
+	--neutral-accent: #dddddd;
+	--neutral-highlight: #bbbbbb;
+	--neutral-lowlight: #777777;
+	--neutral-primary: #999999;
+	--text-dark: #111111;
+	--text-less-dark: #333333;
+	--text-light: #ffffff;
+}
+
+%default-border {
+	border-bottom: 1px solid var(--neutral-lowlight);
+	border-left: 1px solid var(--neutral-highlight);
+	border-right: 1px solid var(--neutral-lowlight);
+	border-top: 1px solid var(--neutral-highlight);
+}
+
+%default-border-reverse {
+	border-bottom: 1px solid var(--neutral-highlight);
+	border-left: 1px solid var(--neutral-lowlight);
+	border-right: 1px solid var(--neutral-highlight);
+	border-top: 1px solid var(--neutral-lowlight);
+}
+
 body {
-	background-color: #555555;
+	background-color: var(--background-color);
+	color: var(--text-dark);
 	display: grid;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 	font-size: 20px;
 	justify-items: center;
 	max-width: 100%;
@@ -17,7 +50,7 @@ button {
 
 dialog {
 	align-items: center;
-	background-color: rgba(255, 255, 255, 0.5);
+	background-color: var(--modal-filter);
 	border: none;
 	display: grid;
 	height: 100%;
@@ -30,10 +63,11 @@ dialog {
 	width: 100%;
 
 	form {
-		background-color: lightsalmon;
+		background-color: var(--neutral-primary);
 		border-radius: 16px;
+		box-shadow: 0 0 0 4px var(--neutral-accent);
 		display: grid;
-		max-width: 400px;
+		max-width: 560px;
 		padding: 24px;
 		position: relative;
 		width: 100%;
@@ -41,39 +75,81 @@ dialog {
 		div {
 			display: grid;
 			grid-template-columns: 96px minmax(0, 1fr);
+			column-gap: 8px;
 			margin: 8px 0;
 
+			input {
+				@extend %default-border-reverse;
+				background-color: var(--neutral-accent);
+				border-radius: 8px;
+				padding: 16px;
+			}
+
 			label {
-				padding-top: 4px;
+				padding-top: 8px;
 			}
 
 			textarea {
-				height: 96px;
-				padding-right: 12px;
+				@extend %default-border-reverse;
+				background-color: var(--neutral-accent);
+				border-radius: 8px;
+				height: 136px;
+				padding: 16px;
+				overflow-y: scroll;
 				resize: none;
+				scrollbar-color: var(--neutral-lowlight) transparent;
+			}
+
+			textarea::-webkit-scrollbar-thumb {
+				background-color: var(--neutral-lowlight);
+			}
+
+			textarea::-webkit-scrollbar-track {
+				background-color: transparent;
 			}
 		}
 
 		button.close-modal {
+			@extend %default-border;
 			align-items: center;
-			background-color: lightgreen;
+			background-color: var(--brand-primary);
 			border-radius: 100px;
+			box-shadow: 0 0 0 4px var(--neutral-accent), 0 0 0 8px transparent;
+			color: var(--text-less-dark);
 			display: grid;
-			font-size: 32px;
-			padding: 0;
+			height: 40px;
+			justify-items: center;
 			position: absolute;
-			right: -8px;
-			top: -8px;
+			right: -16px;
+			text-align: center;
+			top: -16px;
+			width: 40px;
+		}
+
+		button.close-modal:active {
+			@extend %default-border-reverse;
+			background-color: var(--danger-color-active);
+			font-size: 95%;
+			font-weight: bold;
 		}
 
 		button#submit {
-			background-color: lightcyan;
+			@extend %default-border;
+			background-color: var(--brand-primary);
 			border-radius: 8px;
-			border: 1px solid #000000;
-			height: 40px;
+			box-shadow: 0 0 0 4px var(--neutral-accent);
+			color: var(--text-less-dark);
+			font-weight: bold;
+			height: 48px;
 			justify-self: end;
-			margin: 4px 0 0;
-			width: 80px;
+			margin: 8px 0 0;
+			width: 96px;
+		}
+
+		button#submit:active {
+			@extend %default-border-reverse;
+			background-color: var(--brand-primary);
+			font-size: 95%;
 		}
 
 		h1 {
@@ -85,15 +161,32 @@ dialog {
 
 footer {
 	align-items: center;
-	background-color: lightgreen;
+	background-color: var(--brand-primary);
+	color: var(--text-less-dark);
 	display: grid;
+	font-size: 16px;
+	font-weight: bold;
 	grid-area: footer;
 	justify-items: center;
+
+	a {
+		color: var(--text-light);
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: var(--text-light);
+	}
+
+	a:active {
+		color: var(--brand-secondary);
+	}
 }
 
 header {
+	@extend %default-border;
 	align-items: center;
-	background-color: lightblue;
+	background-color: var(--brand-primary);
 	display: grid;
 	grid-area: header;
 	padding: 16px;
@@ -105,37 +198,63 @@ header {
 }
 
 main {
+	@extend %default-border-reverse;
 	align-items: center;
-	background-color: lightyellow;
+	background-color: var(--neutral-highlight);
+	background-image: url(../img/paper_texture_dark.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	border-right: none;
 	display: flex;
 	flex-direction: column;
 	grid-area: main;
 
 	table {
+		@extend %default-border;
 		display: grid;
 		grid-template-rows: 40px 1fr;
 		overflow: scroll;
+		scrollbar-color: var(--neutral-lowlight) transparent;
 		width: 100%;
 	}
 
+	table::-webkit-scrollbar-thumb {
+		background-color: var(--neutral-lowlight);
+	}
+
+	table::-webkit-scrollbar-track {
+		background-color: transparent;
+	}
+
 	thead {
-		background-color: lightcoral;
+		background-color: var(--neutral-accent);
 		inset-block-start: 0;
 		position: sticky;
 
 		tr {
+			@extend %default-border;
 			align-items: center;
+			border-left: none;
+			border-right: none;
 			display: grid;
 			grid-template-columns: 16px 80px 3fr 2fr 2fr 48px 48px;
 			grid-template-rows: 40px;
+
+			button:active {
+				color: var(--neutral-primary);
+			}
 		}
 	}
 
 	tbody {
 		tr {
+			@extend %default-border;
 			align-items: center;
-			background-color: lightseagreen;
-			border-bottom: 1px solid #000000;
+			background-color: var(--neutral-primary);
+			border-left: none;
+			border-right: none;
+			cursor: pointer;
 			display: grid;
 			grid-template-columns: 48px 48px 3fr 2fr 2fr 48px 48px;
 
@@ -147,15 +266,52 @@ main {
 				white-space: nowrap;
 
 				button {
-					font-size: 20px;
+					color: var(--neutral-lowlight);
 					padding: 8px;
+
+					svg {
+						border-radius: 100px;
+					}
 				}
 			}
 
-			.details {
+			td.chevron,
+			td.edit-todo {
+				button:active {
+					color: var(--text-dark);
+				}
+			}
+
+			td.complete,
+			td.incomplete {
+				button:active {
+					color: var(--text-dark);
+
+					svg {
+						background-color: var(--brand-primary);
+					}
+				}
+			}
+
+			td.complete {
+				button {
+					color: var(--text-dark);
+
+					svg {
+						background-color: var(--brand-primary);
+					}
+				}
+			}
+
+			td.delete-todo {
+				button:active {
+					color: var(--danger-color-active);
+				}
+			}
+
+			td.details {
 				align-items: center;
-				background-color: lightskyblue;
-				border-top: 1px solid #000000;
+				background-color: var(--brand-secondary);
 				display: grid;
 				grid-column: 1/-1;
 				justify-items: center;
@@ -167,31 +323,45 @@ main {
 
 				p {
 					margin: 16px;
-					max-width: 400px;
+					max-width: 480px;
 				}
 			}
 
-			.details.hidden,
-			.details.none {
+			td.details.hidden,
+			td.details.none {
 				display: none;
 			}
+		}
+
+		tr:active {
+			background-color: var(--neutral-highlight);
 		}
 	}
 
 	.add-todo {
-		background-color: lightcyan;
-		border-radius: 8px;
-		border: 1px solid #000000;
+		@extend %default-border;
+		background-color: var(--brand-secondary);
+		border-radius: 16px;
+		box-shadow: 0 0 0 4px var(--neutral-accent);
+		color: var(--text-less-dark);
 		flex-shrink: 0;
-		font-size: 16px;
-		height: 40px;
+		font-weight: bold;
+		height: 48px;
 		margin: 16px;
-		width: 120px;
+		width: 144px;
+	}
+
+	.add-todo:active {
+		@extend %default-border-reverse;
+		background-color: var(--brand-primary);
+		font-size: 95%;
 	}
 }
 
 nav {
-	background-color: lightpink;
+	@extend %default-border;
+	background-color: var(--neutral-primary);
+	border-left: none;
 	display: flex;
 	flex-direction: column;
 	grid-area: nav;
@@ -199,17 +369,18 @@ nav {
 
 	form {
 		align-items: center;
-		background-color: lightsalmon;
+		background-color: var(--brand-secondary);
 		border-radius: 16px;
+		border: 4px solid var(--neutral-accent);
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
 		margin: 0 8px 16px;
-		padding: 8px 16px 16px;
+		padding: 8px 12px 16px;
 
 		.input-wrapper {
-			background-color: lightcyan;
+			@extend %default-border-reverse;
+			background-color: var(--neutral-accent);
 			border-radius: 8px;
-			border: 1px solid #000000;
 			display: grid;
 			grid-template-columns: minmax(0, 1fr) 40px;
 			grid-template-rows: 40px;
@@ -228,7 +399,8 @@ nav {
 		}
 
 		label {
-			font-size: 16px;
+			color: var(--text-less-dark);
+			font-weight: bold;
 			margin-bottom: 8px;
 		}
 	}
@@ -239,6 +411,7 @@ nav {
 		margin: 0;
 		overflow: scroll;
 		padding: 16px;
+		scrollbar-color: var(--neutral-lowlight) transparent;
 
 		h2 {
 			font-size: 20px;
@@ -269,26 +442,47 @@ nav {
 			padding: 8px;
 		}
 
+		li:active {
+			background-color: var(--neutral-highlight);
+		}
+
 		li.current {
-			background: lightgreen;
+			background-color: var(--neutral-accent);
 		}
 
 		li.project {
 			button {
+				color: var(--neutral-lowlight);
 				padding: 8px;
+			}
+
+			button:active {
+				color: var(--danger-color-active);
 			}
 
 			p {
 				margin: 0;
 			}
 		}
+
+		ul::-webkit-scrollbar-thumb {
+			background-color: var(--neutral-lowlight);
+		}
+
+		ul::-webkit-scrollbar-track {
+			background-color: transparent;
+		}
 	}
 }
 
 #page {
+	@extend %default-border;
+	border-radius: 32px;
+	border-width: 4px;
 	display: grid;
 	height: 100vh;
 	max-width: 1200px;
+	overflow: hidden;
 	width: 100%;
 
 	grid-template:
@@ -298,4 +492,48 @@ nav {
 		[row4-start] "nav main main main" 1fr [row4-end]
 		[row5-start] "footer footer footer footer" 64px [row5-end]
 		/ 25%;
+}
+
+@media (hover: hover) {
+	dialog form button.close-modal:hover:not(:active) {
+		background-color: var(--danger-color);
+	}
+
+	dialog form button#submit:hover:not(:active),
+	main .add-todo:hover:not(:active) {
+		background-color: var(--brand-primary);
+	}
+
+	footer a:hover:not(:active) {
+		color: var(--brand-secondary);
+	}
+
+	li.project button:hover:not(:active) {
+		color: var(--danger-color);
+	}
+
+	nav ul li:hover:not(.current),
+	tbody tr:hover:not(:active) {
+		background-color: var(--neutral-highlight);
+	}
+
+	tbody tr td.toggle-complete button:hover:not(:active) {
+		color: var(--text-less-dark);
+		svg {
+			background-color: var(--brand-secondary);
+		}
+	}
+
+	tbody tr td.delete-todo button:hover:not(:active) {
+		color: var(--danger-color);
+	}
+
+	tbody tr td.edit-todo button:hover:not(:active),
+	tbody tr td.chevron button:hover:not(:active) {
+		color: var(--text-less-dark);
+	}
+
+	thead tr th button:hover:not(:active) {
+		color: var(--neutral-lowlight);
+	}
 }
