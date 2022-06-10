@@ -1,5 +1,6 @@
 const path = require("path");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -17,6 +18,7 @@ module.exports = {
 			template: "./src/index.html",
 		}),
 		new MiniCssExtractPlugin(),
+		new FaviconsWebpackPlugin("./src/img/favicon.png"),
 	],
 	output: {
 		filename: "[name].js",
@@ -26,12 +28,19 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(s(a|c)ss)$/,
+				test: /\.html$/i,
+				loader: "html-loader",
+			},
+			{
+				test: /\.(s(a|c)ss)$/i,
 				use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
 			},
 			{
-				test: /\.html$/,
-				loader: "html-loader",
+				test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+				type: "asset/resource",
+				generator: {
+					filename: "assets/[name][ext][query]",
+				},
 			},
 		],
 	},
