@@ -46,6 +46,7 @@ button {
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 dialog {
@@ -61,6 +62,7 @@ dialog {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	width: 100%;
+	z-index: 1;
 
 	form {
 		background-color: var(--neutral-primary);
@@ -188,8 +190,29 @@ header {
 	align-items: center;
 	background-color: var(--brand-primary);
 	display: grid;
+	font-size: 24px;
 	grid-area: header;
-	padding: 24px 24px 24px 32px;
+	grid-template-columns: 0 1fr;
+	padding: 24px 32px;
+
+	button {
+		@extend %default-border;
+		background-color: var(--neutral-primary);
+		border-radius: 16px;
+		box-shadow: 0 0 0 4px var(--brand-secondary);
+		color: var(--text-less-dark);
+		display: none;
+		height: 64px;
+		width: 64px;
+	}
+
+	button:active {
+		@extend %default-border-reverse;
+		background-color: var(--neutral-lowlight);
+		border-left: 1px solid var(--background-color);
+		border-top: 1px solid var(--background-color);
+		font-size: 95%;
+	}
 
 	img {
 		height: 80px;
@@ -402,6 +425,7 @@ nav {
 			color: var(--text-less-dark);
 			font-weight: bold;
 			margin-bottom: 8px;
+			white-space: nowrap;
 		}
 	}
 
@@ -409,7 +433,8 @@ nav {
 		font-size: 20px;
 		list-style: none;
 		margin: 0;
-		overflow: scroll;
+		overflow-x: hidden;
+		overflow-y: scroll;
 		padding: 16px;
 		scrollbar-color: var(--neutral-lowlight) transparent;
 
@@ -491,7 +516,7 @@ nav {
 		[row3-start] "nav main main main" 1fr [row3-end]
 		[row4-start] "nav main main main" 1fr [row4-end]
 		[row5-start] "footer footer footer footer" 64px [row5-end]
-		/ 25%;
+		/ 1fr 1fr 1fr 1fr;
 }
 
 @media (hover: hover) {
@@ -502,6 +527,12 @@ nav {
 	dialog form button#submit:hover:not(:active),
 	main .add-todo:hover:not(:active) {
 		background-color: var(--brand-primary);
+	}
+
+	header .toggle-menu:hover:not(:active) {
+		background-color: var(--neutral-highlight);
+		border-left: 1px solid var(--neutral-accent);
+		border-top: 1px solid var(--neutral-accent);
 	}
 
 	footer a:hover:not(:active) {
@@ -535,5 +566,73 @@ nav {
 
 	thead tr th button:hover:not(:active) {
 		color: var(--neutral-lowlight);
+	}
+}
+
+@media screen and (max-width: 960px) {
+	#page {
+		grid-template-columns: 0 1fr 1fr 1fr;
+	}
+
+	header {
+		grid-template-columns: 64px 256px;
+		justify-content: space-between;
+
+		button {
+			display: initial;
+		}
+	}
+
+	nav {
+		max-width: 0;
+		overflow: hidden;
+		position: relative;
+		transition-timing-function: ease-out;
+		transition: 0.33s;
+		width: 0;
+		z-index: 1;
+	}
+
+	nav.open {
+		max-width: 480px;
+		width: calc(100vw - 8px);
+		z-index: 1;
+	}
+}
+
+@media screen and (max-width: 680px) {
+	header {
+		grid-template-columns: 64px 200px;
+		justify-content: space-between;
+
+		button {
+			display: initial;
+		}
+
+		img {
+			height: 64px;
+			width: auto;
+		}
+	}
+
+	main {
+		thead {
+			tr {
+				grid-template-columns: 16px 80px 3fr 2fr 48px 48px;
+
+				th:nth-child(5) {
+					display: none;
+				}
+			}
+		}
+		tbody {
+			tr {
+				grid-template-columns: 48px 48px 3fr 2fr 48px 48px;
+
+				td:nth-child(5) {
+					display: none;
+				}
+			}
+		}
 	}
 }

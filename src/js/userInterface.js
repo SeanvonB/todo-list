@@ -17,6 +17,7 @@ export const userInterface = (() => {
 	// DOM Elements
 	const addButton = document.querySelector("button.add-todo");
 	const dialogContainer = document.querySelector("aside.dialog-container");
+	const menuButton = document.querySelector("button.toggle-menu");
 	const navContainer = document.querySelector("nav.nav-container");
 	const tableBody = document.querySelector("tbody");
 	const tableHead = document.querySelector("thead");
@@ -33,6 +34,8 @@ export const userInterface = (() => {
 		}
 
 		addButton.addEventListener("click", () => renderForm());
+		menuButton.addEventListener("click", toggleMenu);
+		document.body.addEventListener("click", handleUnfocus);
 
 		renderMenu();
 		viewHome();
@@ -212,6 +215,21 @@ export const userInterface = (() => {
 					? deleteProject(project)
 					: viewProject(project);
 			}
+		}
+	}
+
+	/**
+	 * Handle user input when toggle elements are open
+	 *
+	 * @param {Event} e
+	 */
+	function handleUnfocus(e) {
+		if (
+			navContainer.classList.contains("open") &&
+			!navContainer.contains(e.target) &&
+			!menuButton.contains(e.target)
+		) {
+			toggleMenu();
 		}
 	}
 
@@ -445,6 +463,25 @@ export const userInterface = (() => {
 
 			return false;
 		}
+	}
+
+	/**
+	 * Toggle open/close state of nav menu
+	 *
+	 * @returns {boolean} isOpen
+	 */
+	function toggleMenu() {
+		if (navContainer.classList.contains("open")) {
+			navContainer.classList.remove("open");
+			navContainer.classList.add("closed");
+
+			return false;
+		}
+
+		navContainer.classList.remove("closed");
+		navContainer.classList.add("open");
+
+		return true;
 	}
 
 	/**
