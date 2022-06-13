@@ -588,19 +588,19 @@ nav {
 		overflow: hidden;
 		position: relative;
 		transition-timing-function: ease-out;
-		transition: 0.33s;
+		transition: 0.25s;
 		width: 0;
 		z-index: 1;
 	}
 
 	nav.open {
-		max-width: 480px;
+		max-width: 300px;
 		width: calc(100vw - 8px);
 		z-index: 1;
 	}
 }
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 640px) {
 	header {
 		grid-template-columns: 64px 200px;
 		justify-content: space-between;
@@ -634,5 +634,13 @@ nav {
 				}
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 480px) {
+	nav.open {
+		max-width: 480px;
+		width: calc(100vw - 8px);
+		z-index: 1;
 	}
 }

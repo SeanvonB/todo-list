@@ -525,6 +525,7 @@ export const userInterface = (() => {
 	 * Change view to home folder
 	 */
 	function viewHome() {
+		if (navContainer.classList.contains("open")) toggleMenu();
 		updateCurrent("home");
 		renderHeader();
 		renderTasks(allTodos);
@@ -541,6 +542,7 @@ export const userInterface = (() => {
 			}
 		});
 
+		if (navContainer.classList.contains("open")) toggleMenu();
 		updateCurrent("overdue");
 		renderHeader();
 		renderTasks(overdueTodos);
@@ -556,6 +558,7 @@ export const userInterface = (() => {
 			if (todo.project) return todo.project === project;
 		});
 
+		if (navContainer.classList.contains("open")) toggleMenu();
 		updateCurrent(project);
 		renderHeader();
 		renderTasks(projectTodos);
@@ -572,6 +575,7 @@ export const userInterface = (() => {
 			}
 		});
 
+		if (navContainer.classList.contains("open")) toggleMenu();
 		updateCurrent("today");
 		renderHeader();
 		renderTasks(todayTodos);
@@ -590,6 +594,7 @@ export const userInterface = (() => {
 			}
 		});
 
+		if (navContainer.classList.contains("open")) toggleMenu();
 		updateCurrent("upcoming");
 		renderHeader();
 		renderTasks(upcomingTodos);
