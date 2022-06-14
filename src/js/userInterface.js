@@ -303,10 +303,13 @@ export const userInterface = (() => {
 		}
 
 		const menu = Menu(allProjects.sort());
-		menu.addEventListener("click", handleMenu);
-		const form = menu.querySelector("form");
+		while (menu.firstChild) {
+			navContainer.appendChild(menu.firstChild);
+		}
+
+		navContainer.addEventListener("click", handleMenu);
+		const form = navContainer.querySelector("form");
 		form.addEventListener("submit", handleMenu);
-		navContainer.appendChild(menu);
 		navContainer.appendChild(form);
 	}
 

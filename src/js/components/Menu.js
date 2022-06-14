@@ -7,7 +7,10 @@
  * @returns {HTMLUListElement}
  */
 export const Menu = (projects = []) => {
-	const menu = document.createElement("ul");
+	const navContainer = document.createElement("nav");
+
+	const menuDefaults = document.createElement("ul");
+	menuDefaults.classList.add("menu", "defaults");
 
 	const home = document.createElement("li");
 	home.classList.add("home");
@@ -17,7 +20,7 @@ export const Menu = (projects = []) => {
 	homeLabel.textContent = "Home";
 	home.appendChild(homeIcon);
 	home.appendChild(homeLabel);
-	menu.appendChild(home);
+	menuDefaults.appendChild(home);
 
 	const today = document.createElement("li");
 	today.classList.add("today");
@@ -27,7 +30,7 @@ export const Menu = (projects = []) => {
 	todayLabel.textContent = "Today";
 	today.appendChild(todayIcon);
 	today.appendChild(todayLabel);
-	menu.appendChild(today);
+	menuDefaults.appendChild(today);
 
 	const upcoming = document.createElement("li");
 	upcoming.classList.add("upcoming");
@@ -37,7 +40,7 @@ export const Menu = (projects = []) => {
 	upcomingLabel.textContent = "Upcoming";
 	upcoming.appendChild(upcomingIcon);
 	upcoming.appendChild(upcomingLabel);
-	menu.appendChild(upcoming);
+	menuDefaults.appendChild(upcoming);
 
 	const overdue = document.createElement("li");
 	overdue.classList.add("overdue");
@@ -47,11 +50,14 @@ export const Menu = (projects = []) => {
 	overdueLabel.textContent = "Overdue";
 	overdue.appendChild(overdueIcon);
 	overdue.appendChild(overdueLabel);
-	menu.appendChild(overdue);
+	menuDefaults.appendChild(overdue);
+	navContainer.appendChild(menuDefaults);
 
 	const hRule = document.createElement("hr");
-	menu.appendChild(hRule);
+	navContainer.appendChild(hRule);
 
+	const menuProjects = document.createElement("ul");
+	menuProjects.classList.add("menu", "projects");
 	for (let project of projects) {
 		const item = document.createElement("li");
 		item.setAttribute("data-project", project);
@@ -69,8 +75,9 @@ export const Menu = (projects = []) => {
 		item.appendChild(projectLabel);
 		deleteBtn.appendChild(deleteIcon);
 		item.appendChild(deleteBtn);
-		menu.appendChild(item);
+		menuProjects.appendChild(item);
 	}
+	navContainer.appendChild(menuProjects);
 
 	const form = document.createElement("form");
 	form.setAttribute("autocomplete", "off");
@@ -97,7 +104,7 @@ export const Menu = (projects = []) => {
 	inputWrapper.appendChild(addBtn);
 	form.appendChild(label);
 	form.appendChild(inputWrapper);
-	menu.appendChild(form);
+	navContainer.appendChild(form);
 
-	return menu;
+	return navContainer;
 };
