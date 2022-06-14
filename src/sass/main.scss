@@ -69,26 +69,25 @@ dialog {
 		border-radius: 16px;
 		box-shadow: 0 0 0 4px var(--neutral-accent);
 		display: grid;
+		margin: 16px;
 		max-width: 560px;
 		padding: 24px;
 		position: relative;
 		width: 100%;
 
 		div {
+			align-items: center;
 			display: grid;
 			grid-template-columns: 96px minmax(0, 1fr);
-			column-gap: 8px;
+			column-gap: 16px;
 			margin: 8px 0;
 
 			input {
 				@extend %default-border-reverse;
 				background-color: var(--neutral-accent);
 				border-radius: 8px;
+				height: 64px;
 				padding: 16px;
-			}
-
-			label {
-				padding-top: 8px;
 			}
 
 			textarea {
@@ -156,7 +155,7 @@ dialog {
 
 		h1 {
 			font-size: 32px;
-			margin: 0 0 24px;
+			margin: 0 0 32px;
 		}
 	}
 }
@@ -280,6 +279,7 @@ main {
 			cursor: pointer;
 			display: grid;
 			grid-template-columns: 48px 48px 3fr 2fr 2fr 48px 48px;
+			grid-template-rows: 48px;
 
 			td {
 				overflow: hidden;
@@ -290,7 +290,8 @@ main {
 
 				button {
 					color: var(--neutral-lowlight);
-					padding: 8px;
+					height: 48px;
+					width: 48px;
 
 					svg {
 						border-radius: 100px;
@@ -345,7 +346,7 @@ main {
 				white-space: initial;
 
 				p {
-					margin: 16px;
+					margin: 16px 24px;
 					max-width: 480px;
 				}
 			}
@@ -600,7 +601,7 @@ nav {
 	}
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 720px) {
 	header {
 		grid-template-columns: 64px 200px;
 		justify-content: space-between;
@@ -612,6 +613,38 @@ nav {
 		img {
 			height: 64px;
 			width: auto;
+		}
+	}
+
+	main {
+		thead {
+			tr {
+				th {
+					font-size: 16px;
+				}
+			}
+		}
+		tbody {
+			tr {
+				td.created,
+				td.due-date,
+				td.name {
+					font-size: 16px;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+	dialog {
+		form {
+			max-width: calc(100% - 40px);
+
+			button.close-modal {
+				right: 24px;
+				top: 24px;
+			}
 		}
 	}
 
@@ -638,6 +671,44 @@ nav {
 }
 
 @media screen and (max-width: 480px) {
+	dialog {
+		form {
+			div {
+				grid-template-columns: minmax(0, 1fr);
+
+				label {
+					padding-top: 0;
+					margin: 0 0 8px;
+				}
+			}
+		}
+	}
+
+	main {
+		thead {
+			tr {
+				grid-template-columns: 48px 3fr 2fr 48px 48px;
+
+				button.complete {
+					display: none;
+				}
+
+				th:nth-child(1) {
+					display: none;
+				}
+			}
+		}
+		tbody {
+			tr {
+				grid-template-columns: 48px 3fr 2fr 48px 48px;
+
+				td:nth-child(1) {
+					display: none;
+				}
+			}
+		}
+	}
+
 	nav.open {
 		max-width: 480px;
 		width: calc(100vw - 8px);

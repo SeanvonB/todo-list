@@ -52,8 +52,11 @@ export const Task = (todo) => {
 
 	const dueDate = document.createElement("td");
 	dueDate.classList.add("due-date");
-	if (todo.dueDate)
-		dueDate.textContent = format(todo.dueDate, "MMM do, yyyy");
+	if (todo.dueDate) {
+		window.innerWidth > 440
+			? (dueDate.textContent = format(todo.dueDate, "MMM do, yyyy"))
+			: (dueDate.textContent = format(todo.dueDate, "MMM do"));
+	}
 	row.appendChild(dueDate);
 
 	const created = document.createElement("td");
