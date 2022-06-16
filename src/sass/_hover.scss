@@ -1,0 +1,57 @@
+// table.scss
+
+/* ========================== Desktop Hover Styles ========================= */
+@import "variables";
+
+@media (hover: hover) {
+	dialog form button.close-modal:hover:not(:active) {
+		background-color: $danger-color;
+	}
+
+	dialog form button#submit:hover:not(:active),
+	main button.add-todo:hover:not(:active) {
+		background-color: $theme-primary;
+	}
+
+	header button.toggle-menu:hover:not(:active) {
+		background-color: $neutral-highlight;
+		border-left: 1px solid $neutral-accent;
+		border-top: 1px solid $neutral-accent;
+	}
+
+	footer a:hover:not(:active) {
+		color: $theme-secondary;
+	}
+
+	li.project button:hover:not(:active) {
+		color: $danger-color;
+	}
+
+	nav ul li:hover:not(.current) {
+		background-color: $neutral-accent;
+	}
+
+	tbody tr:hover:not(:active) {
+		background-color: $neutral-highlight;
+	}
+
+	thead tr th button:hover:not(:active) {
+		color: $neutral-lowlight;
+	}
+
+	tbody tr td.chevron button:hover:not(:active),
+	tbody tr td.edit-todo button:hover:not(:active) {
+		color: $text-less-dark;
+	}
+
+	tbody tr td.delete-todo button:hover:not(:active) {
+		color: $danger-color;
+	}
+
+	tbody tr td.toggle-complete button:hover:not(:active) {
+		color: $text-less-dark;
+		svg {
+			background-color: $theme-secondary;
+		}
+	}
+}
