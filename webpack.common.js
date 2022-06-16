@@ -2,15 +2,11 @@ const path = require("path");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-	mode: "development",
 	entry: {
 		index: "./src/js/index.js",
-	},
-	devtool: "inline-source-map",
-	devServer: {
-		static: "./dist",
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
@@ -44,6 +40,9 @@ module.exports = {
 	},
 	optimization: {
 		runtimeChunk: "single",
-		minimizer: [new CssMinimizerPlugin()],
+		minimizer: [
+			new CssMinimizerPlugin(),
+			new TerserPlugin({ extractComments: false }),
+		],
 	},
 };
