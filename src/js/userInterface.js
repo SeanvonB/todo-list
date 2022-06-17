@@ -2,6 +2,8 @@
 
 /**
  * Module that controls UI components
+ *
+ * @exports userInterface IIFE module
  */
 import { Form } from "./components/Form";
 import { Header } from "./components/Header";
@@ -51,7 +53,7 @@ export const userInterface = (() => {
 		const nameInUse = allProjects.find((project) => {
 			return name.toLowerCase() === project.toLowerCase();
 		});
-		if (!nameInUse) allProjects.push(name);
+		if (name !== null && !nameInUse) allProjects.push(name);
 
 		renderMenu();
 		viewProject(name);
@@ -74,20 +76,16 @@ export const userInterface = (() => {
 	 * @param {Object} form
 	 */
 	function addTodo(form) {
-		const name = form.name.value;
-		const details = form.details.value;
-
-		let dueDate = form.dueDate.value;
-		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
-
-		let project = form.project.value;
-		if (defaultProjects.includes(project)) {
-			project = null;
-		}
-
 		if (tableBody.querySelector(".no-todos")) {
 			tableBody.querySelector(".no-todos").remove();
 		}
+
+		const name = form.name.value;
+		const details = form.details.value;
+		let project = form.project.value;
+		if (!project) project = null;
+		let dueDate = form.dueDate.value;
+		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
 		todos.addTodo(name, details, dueDate, project);
 		allTodos = todos.getAll();
@@ -132,14 +130,6 @@ export const userInterface = (() => {
 	}
 
 	/**
-	 * Edit name of existing project folder
-	 *
-	 * @param {string} project
-	 * @param {string} newName
-	 */
-	function editProject(project, newName) {}
-
-	/**
 	 * Edit details of existing todo
 	 *
 	 * @param {number} id
@@ -149,7 +139,6 @@ export const userInterface = (() => {
 		const name = form.name.value;
 		const details = form.details.value;
 		const todo = allTodos.find((todo) => todo.id === id);
-
 		let dueDate = form.dueDate.value;
 		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
@@ -174,10 +163,14 @@ export const userInterface = (() => {
 	function handleForm(e) {
 		const closeBtn = e.currentTarget.querySelector("button.close-modal");
 
-		if (e.target === e.currentTarget || closeBtn.contains(e.target)) {
+		function destroyForm() {
 			e.currentTarget.removeEventListener("click", handleForm);
 			e.currentTarget.removeEventListener("submit", handleForm);
 			e.currentTarget.remove();
+		}
+
+		if (e.target === e.currentTarget || closeBtn.contains(e.target)) {
+			destroyForm();
 		}
 		if (e.type === "submit") {
 			const form = e.target.elements;
@@ -185,9 +178,7 @@ export const userInterface = (() => {
 			const editMode = form.edit.value;
 
 			editMode ? editTodo(id, form) : addTodo(form);
-			e.currentTarget.removeEventListener("click", handleForm);
-			e.currentTarget.removeEventListener("submit", handleForm);
-			e.currentTarget.remove();
+			destroyForm();
 		}
 	}
 
@@ -286,7 +277,8 @@ export const userInterface = (() => {
 			dialogContainer.removeChild(dialogContainer.firstChild);
 		}
 
-		const form = Form(currentProject, editTodo);
+		const isProject = !defaultProjects.includes(currentProject);
+		const form = Form(isProject ? currentProject : null, editTodo);
 		form.addEventListener("click", handleForm);
 		form.addEventListener("submit", handleForm);
 		dialogContainer.appendChild(form);
@@ -357,11 +349,11 @@ export const userInterface = (() => {
 	 */
 	function sortTable(column, ascending = true) {
 		const rows = [...tableBody.querySelectorAll("tr")];
-		const select = `td:nth-child(${column})`;
+		const selector = `td:nth-child(${column})`;
 
-		let criteria = (row) => row.querySelector(select).textContent;
+		let criteria = (row) => row.querySelector(selector).textContent;
 		if (column === 2) {
-			criteria = (row) => row.querySelector(select).className;
+			criteria = (row) => row.querySelector(selector).className;
 		}
 
 		function sortAsc(a, b) {
@@ -428,7 +420,6 @@ export const userInterface = (() => {
 			element.classList.add("incomplete");
 			icon.classList.add("far", "fa-circle");
 			button.appendChild(icon);
-
 			todos.toggleComplete(id);
 
 			return false;
@@ -440,7 +431,6 @@ export const userInterface = (() => {
 			element.classList.add("complete");
 			icon.classList.add("far", "fa-check-circle");
 			button.appendChild(icon);
-
 			todos.toggleComplete(id);
 
 			return true;
@@ -455,9 +445,7 @@ export const userInterface = (() => {
 	 */
 	function toggleDetails(element) {
 		const chevron = element.querySelector(".chevron");
-
 		if (chevron.classList.contains("hidden")) return false;
-
 		const chevronBtn = chevron.querySelector("button");
 		const detailsDrawer = element.querySelector(".details");
 		const icon = document.createElement("i");

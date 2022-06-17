@@ -76,7 +76,9 @@ export const Form = (currentProject, editTodo = false) => {
 	projectInput.setAttribute("type", "hidden");
 	projectInput.setAttribute("name", "project");
 	projectInput.setAttribute("id", "project");
-	projectInput.setAttribute("value", currentProject);
+	if (currentProject) {
+		projectInput.setAttribute("value", currentProject);
+	}
 	form.appendChild(projectInput);
 
 	const idInput = document.createElement("input");

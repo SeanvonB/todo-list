@@ -3,8 +3,7 @@
 /**
  * Module that manages todo data
  *
- * NOTE: allTodos is converted to JSON format for localStorage, so methods
- * can't be stored directly on todo objects.
+ * @exports todos IIFE module
  */
 export const todos = (() => {
 	const allTodos = load();
@@ -131,9 +130,9 @@ export const todos = (() => {
 
 	return {
 		addTodo,
-		editTodo,
 		deleteTodo,
 		deleteProject,
+		editTodo,
 		getAll,
 		toggleComplete,
 	};
