@@ -13,6 +13,7 @@ export const userInterface = (() => {
 	let allProjects = [];
 	let allTodos = [];
 	let currentProject = "";
+	let defaultProjects = ["home", "today", "upcoming", "overdue"];
 
 	// DOM Elements
 	const addButton = document.querySelector("button.add-todo");
@@ -47,7 +48,10 @@ export const userInterface = (() => {
 	 * @param {string} name
 	 */
 	function addProject(name) {
-		allProjects.push(name);
+		const nameInUse = allProjects.find((project) => {
+			return name.toLowerCase() === project.toLowerCase();
+		});
+		if (!nameInUse) allProjects.push(name);
 
 		renderMenu();
 		viewProject(name);
@@ -77,12 +81,7 @@ export const userInterface = (() => {
 		if (dueDate) dueDate = new Date(`${dueDate} 00:00:00`);
 
 		let project = form.project.value;
-		if (
-			project === "home" ||
-			project === "today" ||
-			project === "upcoming" ||
-			project === "overdue"
-		) {
+		if (defaultProjects.includes(project)) {
 			project = null;
 		}
 
@@ -213,7 +212,7 @@ export const userInterface = (() => {
 	 */
 	function handleMenu(e) {
 		if (e.type === "submit") {
-			const name = e.target.elements.project.value.toLowerCase();
+			const name = e.target.elements.project.value;
 			addProject(name);
 			return;
 		}
@@ -517,8 +516,22 @@ export const userInterface = (() => {
 			previousProjects[i].classList.remove("current");
 		}
 
+		let isProject = false;
+		if (!defaultProjects.includes(name)) {
+			isProject = true;
+			name = allProjects.find((project) => {
+				return name.toLowerCase() === project.toLowerCase();
+			});
+		}
+
 		currentProject = name;
-		navContainer.querySelector(`li.${name}`).classList.add("current");
+		if (isProject) {
+			navContainer
+				.querySelector(`li[data-project='${name}']`)
+				.classList.add("current");
+		} else {
+			navContainer.querySelector(`li.${name}`).classList.add("current");
+		}
 	}
 
 	/**

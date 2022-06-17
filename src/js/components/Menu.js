@@ -61,12 +61,11 @@ export const Menu = (projects = []) => {
 	for (let project of projects) {
 		const item = document.createElement("li");
 		item.setAttribute("data-project", project);
-		item.classList.add("project", project);
+		item.classList.add("project");
 		const projectIcon = document.createElement("i");
 		projectIcon.classList.add("fas", "fa-list");
 		const projectLabel = document.createElement("h2");
-		projectLabel.textContent =
-			project.charAt(0).toUpperCase() + project.slice(1);
+		projectLabel.textContent = project;
 		const deleteBtn = document.createElement("button");
 		deleteBtn.classList.add("delete-project");
 		const deleteIcon = document.createElement("i");
