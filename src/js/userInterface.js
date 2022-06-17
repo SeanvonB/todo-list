@@ -54,6 +54,17 @@ export const userInterface = (() => {
 	}
 
 	/**
+	 * Add placeholder image to empty tableBody
+	 */
+	function addPlaceholder() {
+		const row = document.createElement("tr");
+		row.classList.add("no-todos");
+		const img = document.createElement("img");
+		row.appendChild(img);
+		tableBody.appendChild(row);
+	}
+
+	/**
 	 * Create new todo
 	 *
 	 * @param {Object} form
@@ -73,6 +84,10 @@ export const userInterface = (() => {
 			project === "overdue"
 		) {
 			project = null;
+		}
+
+		if (tableBody.querySelector(".no-todos")) {
+			tableBody.querySelector(".no-todos").remove();
 		}
 
 		todos.addTodo(name, details, dueDate, project);
@@ -113,6 +128,8 @@ export const userInterface = (() => {
 
 		element.removeEventListener("click", handleTask);
 		element.remove();
+
+		if (!tableBody.firstChild) addPlaceholder();
 	}
 
 	/**
@@ -323,6 +340,8 @@ export const userInterface = (() => {
 			tableBody.firstChild.removeEventListener("click", handleTask);
 			tableBody.removeChild(tableBody.firstChild);
 		}
+
+		if (todos.length < 1) addPlaceholder();
 
 		for (let todo of todos) {
 			const row = Task(todo);

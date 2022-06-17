@@ -31,7 +31,7 @@
 		background-color: $neutral-accent;
 	}
 
-	tbody tr:hover:not(:active) {
+	tbody tr:hover:not(:active, .no-todos) {
 		background-color: $neutral-highlight;
 	}
 

@@ -2,20 +2,21 @@
 
 /* =========================== Todo Display Table ========================== */
 main {
+	@extend %default-border-reverse;
 	align-items: center;
 	background-color: $neutral-highlight;
-	background-image: url(../img/paper_texture.jpg);
+	background-image: url(../img/paper-texture.jpg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+	border-left: none;
+	border-right: none;
+	border-top: none;
 	display: flex;
 	flex-direction: column;
 	grid-area: main;
 
 	table {
-		@extend %default-border;
-		border-left: none;
-		border-right: none;
 		display: grid;
 		grid-template-rows: 50px 1fr;
 		overflow: scroll;
@@ -93,7 +94,26 @@ main {
 			grid-template-columns: 48px 48px 3fr 2fr 2fr 48px 48px;
 			grid-template-rows: 48px;
 
-			&:active {
+			&.no-todos {
+				background-color: transparent;
+				border: none;
+				cursor: default;
+				display: flex;
+				grid-template-columns: min(0, 1fr);
+				grid-template-rows: 100%;
+				height: 100%;
+				justify-content: center;
+				padding: 24px 24px 0;
+
+				img {
+					content: url(../img/no-todos.svg);
+					display: block;
+					height: 100%;
+					opacity: 50%;
+				}
+			}
+
+			&:active:not(.no-todos) {
 				background-color: $neutral-highlight;
 			}
 
@@ -182,7 +202,7 @@ main {
 		flex-shrink: 0;
 		font-weight: bold;
 		height: 48px;
-		margin: 16px;
+		margin: 24px;
 		width: 144px;
 	}
 
@@ -306,5 +326,16 @@ main {
 				display: none;
 			}
 		}
+	}
+}
+
+@media screen and (max-height: 480px) {
+	main tbody tr.no-todos {
+		max-height: 96px;
+		padding-top: 16px;
+	}
+
+	main .add-todo {
+		margin: 16px;
 	}
 }
