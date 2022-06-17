@@ -17,11 +17,19 @@ main {
 	grid-area: main;
 
 	table {
+		@extend %default-border;
+		border-left: none;
+		border-right: none;
+		border-top: none;
 		display: grid;
 		grid-template-rows: 50px 1fr;
 		overflow: scroll;
 		scrollbar-color: $neutral-lowlight transparent;
 		width: 100%;
+
+		&.no-todos {
+			border-bottom: none;
+		}
 
 		&::-webkit-scrollbar-thumb {
 			background-color: $neutral-lowlight;

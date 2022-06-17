@@ -22,6 +22,7 @@ export const userInterface = (() => {
 	const dialogContainer = document.querySelector("aside.dialog-container");
 	const menuButton = document.querySelector("button.toggle-menu");
 	const navContainer = document.querySelector("nav.nav-container");
+	const table = document.querySelector("table");
 	const tableBody = document.querySelector("tbody");
 	const tableHead = document.querySelector("thead");
 
@@ -63,6 +64,7 @@ export const userInterface = (() => {
 	 * Add placeholder image to empty tableBody
 	 */
 	function addPlaceholder() {
+		table.classList.add("no-todos");
 		const row = document.createElement("tr");
 		row.classList.add("no-todos");
 		const img = document.createElement("img");
@@ -78,6 +80,7 @@ export const userInterface = (() => {
 	function addTodo(form) {
 		if (tableBody.querySelector(".no-todos")) {
 			tableBody.querySelector(".no-todos").remove();
+			table.classList.remove("no-todos");
 		}
 
 		const name = form.name.value;
