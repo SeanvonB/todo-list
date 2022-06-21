@@ -10,7 +10,7 @@ nav {
 	grid-area: nav;
 	grid-template-columns: minmax(0, 1fr);
 	max-width: 300px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	width: 100%;
 
 	form {
@@ -20,7 +20,7 @@ nav {
 		border-radius: 16px;
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
-		margin: 8px 16px 16px;
+		margin: 0 16px 16px;
 		padding: 8px 12px 16px;
 
 		.input-wrapper {
@@ -53,6 +53,7 @@ nav {
 	}
 
 	hr {
+		border-color: $text-less-dark;
 		width: 80%;
 	}
 
@@ -69,7 +70,12 @@ nav {
 		}
 
 		&.projects {
+			margin-bottom: 8px;
 			scrollbar-color: $neutral-lowlight transparent;
+
+			&:empty {
+				margin-bottom: 0;
+			}
 
 			ul::-webkit-scrollbar-thumb {
 				background-color: $neutral-lowlight;

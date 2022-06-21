@@ -22,7 +22,7 @@ main {
 		border-top: none;
 		display: grid;
 		grid-template-rows: 50px 1fr;
-		overflow: scroll;
+		overflow-y: auto;
 		scrollbar-color: $neutral-lowlight transparent;
 		width: 100%;
 
@@ -59,6 +59,7 @@ main {
 				justify-items: center;
 
 				button {
+					color: $text-less-dark;
 					width: 96px;
 
 					&:active {
